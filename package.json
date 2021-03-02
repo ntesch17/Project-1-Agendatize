@@ -4,7 +4,13 @@
   "description": "",
   "main": "./src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests complete\"",
+    "debug": "node --inspect ./src/server.js",
+    "nodemon": "nodemon -e js,html,css --watch ./src --watch ./hosted ./src/server.js",
+    "build": "babel ./client --out-file ./hosted/DONT_EDIT_bundle.js",
+    "watch": "babel --watch ./client --out-file ./hosted/DONT_EDIT_bundle.js"
   },
   "repository": {
     "type": "git",
