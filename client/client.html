@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Agendatize</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  <script type="text/babel">
+
+let head = false;
+
+ const parseJSON = (xhr, content) => {
+      if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'application/json'){
+        const obj = JSON.parse(xhr.response);
+        if(obj.message){
+            content.innerHTML += `<p>${obj.message}</p>`
+        }
+        else{
+          content.innerHTML += `<p>${xhr.response}</p>`
+        }
+      } 
+    };
+
+  const handleResponse = (xhr) => {
+      const content = document.querySelector('#toDoContent');
+      const content2 = document.querySelector('#doingContent');
+      const content3 = document.querySelector('#doneContent');
+      const content4 = document.querySelector('#almostDoneContent');
+      switch(xhr.status) {
+        case 200: //if success
+          content.innerHTML = `<b>Success!</b>`;
+          content2.innerHTML = `<b>Success!</b>`;
+          content3.innerHTML = `<b>Success!</b>`;
+          content4.innerHTML = `<b>Success!</b>`;
+          break;
+        case 201: //if created
+          content.innerHTML = '<b>Created!</b>';
+          break;
+        case 204: //if update request
+          content.innerHTML = `<b>Updated (No Content)!</b>`;
+          break;
+        case 400: //if Bad Request
+          content.innerHTML = `<b>Bad Request!</b>`;
+          break;
+        default: //any other status
+          content.innerHTML = `<b>Resource not found!</b>`;
+          break;
+      }
+      parseJSON(xhr,content);
+    }
+
+    const sendPost = (e, nameForm) => {
+      e.preventDefault();
+
+      const nameAction = nameForm.getAttribute('action');
+      const nameMethod = nameForm.getAttribute('method');
+
+      const nameField = nameForm.querySelector('#nameField');
+      const ageField = nameForm.querySelector('#ageField');
+
+      const xhr = new XMLHttpRequest();
+      xhr.open(nameMethod, nameAction);
+
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      //getUser?nanme=Nick&age=1
+
+      xhr.onload = () => handleResponse(xhr);
+      
+      const formData = `name=${nameField.value}&age=${ageField.value}`;
+      xhr.send(formData);
+
+      return false;
+    };
+
+    const sendAjax = (e, url, acceptedType) => {
+      e.preventDefault();
+        const xhr = new XMLHttpRequest();
+
+        if(head === false){
+            xhr.open('GET', url);
+        }
+        if(head === true){
+          xhr.open('HEAD', url);
+        }
+        xhr.setRequestHeader('Accept', acceptedType);
+
+        xhr.onload = () => handleResponse(xhr);
+
+        xhr.send();
+    };
+
+    const init = () => {
+      let url, method;
+      const nameForm = document.querySelector('#nameForm');
+      const userForm = document.querySelector('#userForm');
+      const urlForm = document.querySelector('#urlField').onchange=e=>{
+        url = e.target.value;
+      }
+      const methodForm = document.querySelector('#methodSelect').onchange=e=>{
+        if(e.target.value == 'head'){
+          head = true;
+        }
+        else{
+          head = false;
+        }
+      }
+      const addUser = (e) => sendPost(e, nameForm);
+      const getUser = (e) => sendAjax(e, url, 'application/json');
+      userForm.addEventListener('submit', getUser);
+      nameForm.addEventListener('submit', addUser);
+      
+    };
+
+    window.onload = init;
+
+  </script>
+</head>
+<body>
+<header>
+  <h1 id = "title">Agendatize!</h1>
+  <h3 id = "auther">By: Nicholas Tesch</h3>
+</header>
+
+<div id = "contentTitles">
+</section>
+<h3 id = "toDoTitle">To Do: </h3>
+</section>
+</section>
+<h3 id = "doingTitle">Doing: </h3>
+</section>
+</section>
+<h3 id = "almostDoneTitle">Almost Done: </h3>
+</section>
+</section>
+<h3 id = "doneTitle">Done: </h3>
+</section>
+</div>
+
+<div id = "content">
+</section>
+<section id="toDoContent">
+</section>
+</section>
+<section id="doingContent">
+</section>
+</section>
+<section id="almostDoneContent">
+</section>
+</section>
+<section id="doneContent">
+</section>
+</div>
+
+<div id = "serverResponses">
+</section>
+<section id="serverContent">
+</section>
+</div>
+
+  <section id="top">
+    
+  
+    <form id="nameForm" action="/addUser" method="post">
+      <label for="name">Name: </label>
+      <input id="nameField" type="text" name="name" />
+      <label for="age">Age: </label>
+      <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
+      <input type="submit" value="Add User" />
+    </form>
+    <form id="userForm" action="/getUsers" method="get">
+      <select id='urlField'>
+        <option selected>Select a URL</option>
+        <option value='/getUsers'>/getUsers</option>
+        <option value='/notReal'>/notReal</option>
+      </select>
+      <select id="methodSelect">
+        <option selected>Select a METHOD</option>
+        <option value="get">GET</option>
+        <option value="head">HEAD</option>
+      </select>
+      <input type="submit" value="Get User" />
+    </form>
+  </section>
+</body>
+</html>
