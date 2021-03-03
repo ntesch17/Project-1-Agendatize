@@ -26,25 +26,25 @@ const getUsers = (request, response) => {
 
 const addUser = (request, response, body) => {
   const responseJSON = {
-    message: 'Message: Name and Age are both required',
+    message: 'Message: The Assignments title, description, and due date are all required',
     id: 'Bad Request',
   };
 
-  if (!body.name || !body.age) {
+  if (!body.title || !body.description || !body.dueDate) {
     responseJSON.id = 'ID: Missing Params';
     return respondJSON(request, response, 400, responseJSON);
   }
 
   let responseCode = 201;
 
-  if (users[body.name]) {
+  if (users[body.title]) {
     responseCode = 204;
   } else {
-    users[body.name] = {};
-    users[body.name].name = body.name;
+    users[body.title] = {};
+    users[body.title].title = body.title;
   }
 
-  users[body.name].age = body.age;
+  users[body.title].dueDate = body.dueDate;
 
   if (responseCode === 201) {
     responseJSON.message = 'Message: Created Successfuly!';

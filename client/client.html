@@ -8,55 +8,82 @@
   <script type="text/babel">
 
 let head = false;
+let toDo = false;
+let doing = false;
+let almostDone = false;
+let done = false;
 
- const parseJSON = (xhr, content) => {
+ const parseJSON = (xhr,content) => {
+console.log("here");
       if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'application/json'){
-        const obj = JSON.parse(xhr.response);
-        if(obj.message){
-            content.innerHTML += `<p>${obj.message}</p>`
-        }
-        else{
-          content.innerHTML += `<p>${xhr.response}</p>`
-        }
+        let obj = JSON.parse(xhr.response);
+        let title = obj.users.title;
+        //let description = obj.description;
+        let dueDate = obj.dueDate;
+        
+        content.innerHTML += `<h3>${title}</h3>`;
+       // content.innerHTML += `<h3>${description}</h3>`;
+        content.innerHTML += `<h3>${dueDate}</h3>`;
+      
       } 
     };
 
   const handleResponse = (xhr) => {
-      const content = document.querySelector('#toDoContent');
-      const content2 = document.querySelector('#doingContent');
-      const content3 = document.querySelector('#doneContent');
-      const content4 = document.querySelector('#almostDoneContent');
-      switch(xhr.status) {
-        case 200: //if success
-          content.innerHTML = `<b>Success!</b>`;
-          content2.innerHTML = `<b>Success!</b>`;
-          content3.innerHTML = `<b>Success!</b>`;
-          content4.innerHTML = `<b>Success!</b>`;
-          break;
-        case 201: //if created
-          content.innerHTML = '<b>Created!</b>';
-          break;
-        case 204: //if update request
-          content.innerHTML = `<b>Updated (No Content)!</b>`;
-          break;
-        case 400: //if Bad Request
-          content.innerHTML = `<b>Bad Request!</b>`;
-          break;
-        default: //any other status
-          content.innerHTML = `<b>Resource not found!</b>`;
-          break;
-      }
-      parseJSON(xhr,content);
+    let contentToDo, contentDoing, contentAlmostDone, contentDone, content;
+    const serverContent = document.querySelector("#serverContent");
+   
+    if(toDo === true){
+      console.log('here');
+      content = document.querySelector("#toDoContent");
+    }
+    if(doing === true){
+      content = document.querySelector("#doingContent");
+    }
+    if(almostDone === true){
+      content = document.querySelector("#almostDoneContent");
+    }
+    if(done === true){
+      content = document.querySelector("#doneContent");
     }
 
-    const sendPost = (e, nameForm) => {
+    
+    switch(xhr.status) {
+        case 200: //if success
+        serverContent.innerHTML = `<b>Success!</b>`;
+         
+          break;
+        case 201: //if created
+        serverContent.innerHTML = '<b>Created!</b>';
+          break;
+        case 204: //if update request
+        serverContent.innerHTML = `<b>Updated (No Content)!</b>`;
+          break;
+        case 400: //if Bad Request
+        serverContent.innerHTML = `<b>Bad Request!</b>`;
+          break;
+        default: //any other status
+        serverContent.innerHTML = `<b>Resource not found!</b>`;
+          break;
+      }
+      const obj = JSON.parse(xhr.response);
+
+      serverContent.innerHTML += `<p>${obj.message}</p>`
+        
+
+      parseJSON(xhr, content);
+    
+      
+    }
+
+    const sendPost = (e, assignmentForm) => {
       e.preventDefault();
 
-      const nameAction = nameForm.getAttribute('action');
-      const nameMethod = nameForm.getAttribute('method');
+      const nameAction = assignmentForm.getAttribute('action');
+      const nameMethod = assignmentForm.getAttribute('method');
 
-      const nameField = nameForm.querySelector('#nameField');
-      const ageField = nameForm.querySelector('#ageField');
+      const titleField = assignmentForm.querySelector('#titleField');
+      const descriptionField = assignmentForm.querySelector('#descriptionField');
+      const dueDateField = assignmentForm.querySelector('#dueDateField');
 
       const xhr = new XMLHttpRequest();
       xhr.open(nameMethod, nameAction);
@@ -67,7 +94,7 @@ let head = false;
 
       xhr.onload = () => handleResponse(xhr);
       
-      const formData = `name=${nameField.value}&age=${ageField.value}`;
+      const formData = `title=${titleField.value}&description=${descriptionField.value}&dueDate=${dueDateField.value}`;
       xhr.send(formData);
 
       return false;
@@ -92,8 +119,38 @@ let head = false;
 
     const init = () => {
       let url, method;
-      const nameForm = document.querySelector('#nameForm');
+      const assignmentForm = document.querySelector('#assignmentForm');
       const userForm = document.querySelector('#userForm');
+
+      
+      document.querySelector('#cardField').onchange=e=>{
+        
+        if( e.target.value == 'toDo'){
+          toDo = true;
+          doing = false;
+          almostDone = false;
+          done = false;
+        }
+        if( e.target.value == 'doing'){
+          toDo = false;
+          doing = true;
+          almostDone = false;
+          done = false;
+        }
+        if( e.target.value == 'almostDone'){
+          toDo = false;
+          doing = false;
+          almostDone = true;
+          done = false;
+        }
+        if( e.target.value == 'done'){
+          toDo = false;
+          doing = false;
+          almostDone = false;
+          done = true;
+        }
+      }
+
       const urlForm = document.querySelector('#urlField').onchange=e=>{
         url = e.target.value;
       }
@@ -105,10 +162,10 @@ let head = false;
           head = false;
         }
       }
-      const addUser = (e) => sendPost(e, nameForm);
+      const addUser = (e) => sendPost(e, assignmentForm);
       const getUser = (e) => sendAjax(e, url, 'application/json');
       userForm.addEventListener('submit', getUser);
-      nameForm.addEventListener('submit', addUser);
+      assignmentForm.addEventListener('submit', addUser);
       
     };
 
@@ -119,7 +176,7 @@ let head = false;
 <body>
 <header>
   <h1 id = "title">Agendatize!</h1>
-  <h3 id = "auther">By: Nicholas Tesch</h3>
+  <h3 id = "author">By: Nicholas Tesch</h3>
 </header>
 
 <div id = "contentTitles">
@@ -140,7 +197,9 @@ let head = false;
 <div id = "content">
 </section>
 <section id="toDoContent">
+
 </section>
+
 </section>
 <section id="doingContent">
 </section>
@@ -161,11 +220,28 @@ let head = false;
   <section id="top">
     
   
-    <form id="nameForm" action="/addUser" method="post">
+    <!-- <form id="nameForm" action="/addUser" method="post">
       <label for="name">Name: </label>
       <input id="nameField" type="text" name="name" />
       <label for="age">Age: </label>
       <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
+      <input type="submit" value="Add User" />
+    </form> -->
+    <form id="assignmentForm" action="/addUser" method="post">
+      <label for="title">Assignment Title: </label>
+      <input id="titleField" type="text" name="title" />
+      <label for="description">Assignment Description: </label>
+      <input id="descriptionField" type="text" name="description" />
+      <label for="dueDate">Assignment Due Date:</label>
+      <input type="date" id="dueDateField" name="dueDate">
+      
+      <select id='cardField'>
+        <option selected>Select a Card to place Assignment Under</option>
+        <option value='toDo'>To Do Section</option>
+        <option value='doing'>Doing Section</option>
+        <option value='almostDone'>Almost Done Section</option>
+        <option value='done'>Done Section</option>
+      </select>
       <input type="submit" value="Add User" />
     </form>
     <form id="userForm" action="/getUsers" method="get">

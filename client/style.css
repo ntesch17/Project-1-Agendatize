@@ -6,6 +6,21 @@ html, body {
   background-color: #EDDCD2;
 }
 
+#title{
+  font-size: 80px;
+    color: #6b705c;
+    text-align: center;
+    text-decoration: underline;
+    background-color: #DDBEA9;
+}
+
+#author{
+  font-size: 40px;
+  color: #6b705c;
+  text-align: center;
+  background-color: #DDBEA9;
+}
+
 #top {
   margin-top: 200px;
   text-align: center;
@@ -15,6 +30,7 @@ html, body {
 #content{
   display:grid;
   grid-template-columns: 25% 25% 25% 25%;
+ 
 }
 
 #contentTitles{
@@ -24,49 +40,52 @@ html, body {
 
 
 #doingTitle {
-  display: block;
-  
   margin-top: 20px;
   
   font-size: 1em;
   text-align: center;
-  background-color: #F0EFEB;
+  background-color: #DDBEA9;
+  color: #6b705c;
 }
 
 #doneTitle {
   margin-top: 20px;
   font-size: 1em;
   text-align: center;
-  background-color: #F0EFEB;
+  background-color: #DDBEA9;
+  color: #6b705c;
 }
 
 #toDoTitle {
-  display: grid;
-  grid-column: 1;
-  grid-row: 1;
+  
   margin-top: 20px;
   
   font-size: 1em;
  
   text-align: center;
-  background-color: #F0EFEB;
+  background-color: #DDBEA9;
+  color: #6b705c;
 }
 
 #almostDoneTitle {
   margin-top: 20px;
   font-size: 1em;
   text-align: center;
-  background-color: #F0EFEB;
+  background-color: #DDBEA9;
+  color: #6b705c;
 }
 
 #doingContent {
-  display: block;
   
+
+  height:400px;
   margin-top: 20px;
   
   font-size: 1em;
   text-align: center;
   background-color: #F0EFEB;
+  color: #6b705c;
+  overflow: scroll;
 }
 
 #doneContent {
@@ -74,25 +93,28 @@ html, body {
   font-size: 1em;
   text-align: center;
   background-color: #F0EFEB;
+  color: #6b705c;
+  overflow: scroll;
 }
 
 #toDoContent {
-  display: grid;
-  grid-column: 1;
-  grid-row: 1;
   margin-top: 20px;
   
   font-size: 1em;
  
   text-align: center;
-  background-color: #F0EFEB;
+  background-color: #FFF1E6;
+  color: #6b705c;
+  overflow: scroll;
 }
 
 #almostDoneContent {
   margin-top: 20px;
   font-size: 1em;
   text-align: center;
-  background-color: #F0EFEB;
+  background-color: #FFF1E6;
+  color: #6b705c;
+  overflow: scroll;
 }
 
 
@@ -101,6 +123,7 @@ html, body {
   font-size: 1em;
   text-align: center;
   background-color: #F0EFEB;
+  color: #6b705c;
   border: 8px solid #DDBEA9;
   width:785px;
   height:200px;

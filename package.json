@@ -21,5 +21,14 @@
   "bugs": {
     "url": "https://github.com/ntesch17/Project-1-Agendatize/issues"
   },
-  "homepage": "https://github.com/ntesch17/Project-1-Agendatize#readme"
+  "homepage": "https://github.com/ntesch17/Project-1-Agendatize#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.13.0",
+    "@babel/core": "^7.13.8",
+    "@babel/preset-env": "^7.13.9",
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.7"
+  }
 }
