@@ -15,21 +15,37 @@ let done = false;
 
  const parseJSON = (xhr,content) => {
 console.log("here");
-      if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'application/json'){
-        let obj = JSON.parse(xhr.response);
-        let title = obj.users.title;
-        //let description = obj.description;
-        let dueDate = obj.dueDate;
+    if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'application/json'){
+        const obj = JSON.parse(xhr.response);
+        const regex = /,(?!(([^"]*"){2})*[^"]*$)/;
+        //let rows = obj.trim().split("\n");
+        //content.innerHTML += `<p>${xhr.response}</p>`
         
-        content.innerHTML += `<h3>${title}</h3>`;
-       // content.innerHTML += `<h3>${description}</h3>`;
-        content.innerHTML += `<h3>${dueDate}</h3>`;
-      
-      } 
+        
+       
+    
+        content.innerHTML += `<p>${obj.assignment}</p>`
+    } 
+    if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/xml'){
+      // let obj = JSON.parse(xhr.response); 
+      // content.innerHTML += `<p>${xhr.response.assignment}</p>`
+      const h1 = document.createElement('h1');
+      const p = document.createElement('p');
+      const message = xhr.responseXML.querySelector('assignment').textContent;
+     // const id = xhr.responseXML.querySelector('id').textContent;
+      h1.textContent = `${message}`;
+     // p.textContent = `${id}`;
+      content.appendChild(h1);
+      //content.appendChild(p);
+    } 
     };
 
   const handleResponse = (xhr) => {
     let contentToDo, contentDoing, contentAlmostDone, contentDone, content;
+    //const obj = JSON.parse(xhr.response);
+    const type = xhr.getResponseHeader('content-type');
+    const h1 = document.createElement('h1');
+      const p = document.createElement('p');
     const serverContent = document.querySelector("#serverContent");
    
     if(toDo === true){
@@ -65,17 +81,34 @@ console.log("here");
         serverContent.innerHTML = `<b>Resource not found!</b>`;
           break;
       }
-      const obj = JSON.parse(xhr.response);
-
-      serverContent.innerHTML += `<p>${obj.message}</p>`
-        
+     
+      if(type === 'application/json'){
+        const obj = JSON.parse(xhr.response);
+        serverContent.innerHTML += `<p>${obj.message}</p>`;
+        serverContent.innerHTML += `<p>${obj.id}</p>`;
+      }
+      // if(obj.message){
+      //   serverContent.innerHTML += `<p>${obj.message}</p>`;
+      //   }
+        else if(type === 'text/xml'){
+      const h1 = document.createElement('h1');
+      const p = document.createElement('p');
+      const message = xhr.responseXML.querySelector('assignment').textContent;
+      //const id = xhr.responseXML.querySelector('id').textContent;
+      serverContent.innerHTML += `<p>${message}</p>`;
+       // serverContent.innerHTML += `<p>${id}</p>`;
+       serverContent.appendChild(h1);
+      //content.appendChild(p);
+      }
+        //let assignment = JSON.stringify(obj.assignment);
+       
 
       parseJSON(xhr, content);
     
       
     }
 
-    const sendPost = (e, assignmentForm) => {
+    const sendPost = (e, assignmentForm, type) => {
       e.preventDefault();
 
       const nameAction = assignmentForm.getAttribute('action');
@@ -88,7 +121,7 @@ console.log("here");
       const xhr = new XMLHttpRequest();
       xhr.open(nameMethod, nameAction);
 
-      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.setRequestHeader('Accept', type);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
       //getUser?nanme=Nick&age=1
 
@@ -118,7 +151,7 @@ console.log("here");
     };
 
     const init = () => {
-      let url, method;
+      let url, method, type;
       const assignmentForm = document.querySelector('#assignmentForm');
       const userForm = document.querySelector('#userForm');
 
@@ -162,8 +195,12 @@ console.log("here");
           head = false;
         }
       }
-      const addUser = (e) => sendPost(e, assignmentForm);
-      const getUser = (e) => sendAjax(e, url, 'application/json');
+
+      document.querySelector("#typeField").onchange = (e) => {
+        type = e.target.value;
+      }
+      const addUser = (e) => sendPost(e, assignmentForm, type);
+      const getUser = (e) => sendAjax(e, url, type);
       userForm.addEventListener('submit', getUser);
       assignmentForm.addEventListener('submit', addUser);
       
@@ -241,6 +278,15 @@ console.log("here");
         <option value='doing'>Doing Section</option>
         <option value='almostDone'>Almost Done Section</option>
         <option value='done'>Done Section</option>
+      </select>
+
+      <select id="typeField">
+        <option selected>Select a type</option>
+        <option value="application/json">JSON</option>
+        <option value="text/xml">XML</option>
+        <option value="text/html">HTML</option>
+        <option value="font/woff">Font: Woff</option>
+        <option value="font/woff2">Font: Woff 2</option>
       </select>
       <input type="submit" value="Add User" />
     </form>
