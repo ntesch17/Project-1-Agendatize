@@ -3,7 +3,7 @@
 // Same when your heroku app shuts down from inactivity
 // We will be working with databases in the next few weeks.
 const assignment = {};
-const title = {};
+
 const respond = (request, response, status, object, type) => {
   response.writeHead(status, { 'Content-Type': type });
   response.write(object);
@@ -26,7 +26,7 @@ const getUsers = (request, response, acceptedTypes) => {
 
   const responsesMessage = {
     message: 'Assignment Added!',
-    assignment: `${JSON.stringify(assignment)}`,
+    assignment: `Assignment: ${JSON.stringify(assignment)}`,
 
   };
   
@@ -47,11 +47,12 @@ const addUser = (request, response, body, acceptedTypes) => {
   const responsesMessage = {
     message: 'Message: The Assignments title, description, and due date are all required',
     id: 'Bad Request',
+
   };
 
   if (!body.title || !body.description || !body.dueDate) {
     responsesMessage.id = 'ID: Missing Params';
-
+    
     if (acceptedTypes[0] === 'text/xml') {
       let responseXML = '<response>';
       responseXML = `${responseXML} <message>${responsesMessage.message}</message>`;
@@ -65,9 +66,12 @@ const addUser = (request, response, body, acceptedTypes) => {
     const res = JSON.stringify(responsesMessage);
     respond(request, response, 400, res, 'application/json');
     return respondMeta(request, response, 400, 'application/json');
+    //respond(request, response, 400, responsesMessage, 'text/html');
+    //return respondMeta(request, response, 400, 'text/html');
   }
 
   let responseCode = 201;
+
 
   if (assignment[body.title]) {
     responseCode = 204;
