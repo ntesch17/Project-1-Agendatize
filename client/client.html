@@ -32,6 +32,7 @@ if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/html')
         const obj = JSON.parse(xhr.response);
         
         const regex = /,(?!(([^"]*"){2})*[^"]*$)/;
+        content.innerHTML += "\n";
         //let rows = obj.trim().split("\n");
         //content.innerHTML += `<p>${xhr.response}</p>`
         const titleField = assignmentForm.querySelector('#titleField');
@@ -42,7 +43,9 @@ if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/html')
       content.innerHTML += `<p>Description: ${descriptionField.value}</p>`
       content.innerHTML += `<p>Due Date: ${dueDateField.value}</p>`
     
-       // content.innerHTML += `<p>${obj.assignment}</p>`
+      //const values = Object.values(obj);
+    //console.log(values);
+       //content.innerHTML += `<p>\n${values[1]}</p>`;
     } 
     if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/xml'){
       const regex = /,(?!(([^"]*"){2})*[^"]*$)/;
@@ -125,8 +128,10 @@ if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/html')
         else if(type === 'text/xml'){
       
       const message = xhr.responseXML.querySelector('message').textContent;
+     
       //const id = xhr.responseXML.querySelector('id').textContent;
-      serverContent.innerHTML += `<p>${message}</p>`;
+      serverContent.innerHTML += `<p>Message: ${message}</p>`;
+      serverContent.innerHTML += `<p>Server Data Passed: ${xhr.response}</p>`;
        // serverContent.innerHTML += `<p>${id}</p>`;
        
       //content.appendChild(p);
@@ -158,7 +163,7 @@ if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/html')
 
       xhr.onload = () => handleResponse(xhr);
       
-      const formData = `title=${titleField.value}&description=${descriptionField.value}&dueDate=${dueDateField.value}`;
+      const formData = `Title=${titleField.value}&Description=${descriptionField.value}&DueDate=${dueDateField.value}`;
       xhr.send(formData);
      // console.log(titleField.value)
       //content.innerHTML += `<p>${titleField.value}</p>`
@@ -280,12 +285,24 @@ if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/html')
 </section>
 </div>
 
+
+<div id = "serverContentTitles">
+</section>
+<h3 id = "serverTitle">Server Content: </h3>
+</section>
+</div>
+
 <div id = "serverResponses">
 </section>
 <section id="serverContent">
 </section>
 </div>
 
+  <div id="controlsTitle">
+    <section>
+    <h3 id = "controlsTitle">Agendatize Controls: </h3>
+  </section>
+  </div>
   <section id="top">
     
   
@@ -336,5 +353,6 @@ if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/html')
       <input type="submit" value="Get User" />
     </form>
   </section>
+ 
 </body>
 </html>

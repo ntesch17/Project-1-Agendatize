@@ -26,7 +26,7 @@ const getUsers = (request, response, acceptedTypes) => {
 
   const responsesMessage = {
     message: 'Assignment Added!',
-    assignment: `Assignment: ${JSON.stringify(assignment)}`,
+    assignment: `${JSON.stringify(assignment)}`,
 
   };
   
@@ -45,13 +45,13 @@ const getUsers = (request, response, acceptedTypes) => {
 
 const addUser = (request, response, body, acceptedTypes) => {
   const responsesMessage = {
-    message: 'Message: The Assignments title, description, and due date are all required',
+    message: 'The Assignments title, description, and due date are all required',
     id: 'Bad Request',
 
   };
 
-  if (!body.title || !body.description || !body.dueDate) {
-    responsesMessage.id = 'ID: Missing Params';
+  if (!body.Title || !body.Description || !body.DueDate) {
+    responsesMessage.id = 'Missing Params';
     
     if (acceptedTypes[0] === 'text/xml') {
       let responseXML = '<response>';
@@ -73,18 +73,18 @@ const addUser = (request, response, body, acceptedTypes) => {
   let responseCode = 201;
 
 
-  if (assignment[body.title]) {
+  if (assignment[body.Title]) {
     responseCode = 204;
   } else {
-    assignment[body.title] = {};
-    assignment[body.title].title = body.title;
+    assignment[body.Title] = {};
+    assignment[body.Title].Title = body.Title;
   }
 
-  assignment[body.title].dueDate = body.dueDate;
-  assignment[body.title].description = body.description;
+  assignment[body.Title].DueDate = body.DueDate;
+  assignment[body.Title].Description = body.Description;
 
   if (responseCode === 201) {
-    responsesMessage.message = 'Message: Created Successfuly!';
+    responsesMessage.message = 'Created Successfuly!';
     responsesMessage.id = 'Success';
 
     if (acceptedTypes[0] === 'text/xml') {
@@ -102,16 +102,16 @@ const addUser = (request, response, body, acceptedTypes) => {
     return respondMeta(request, response, responseCode, 'application/json');
   }
 
-  // if (acceptedTypes[0] === 'text/xml') {
-  //   return respondMeta(request, response, responseCode, 'text/xml');
-  // }
-  //return respondMeta(request, response, responseCode, 'application/json');
+  if (acceptedTypes[0] === 'text/xml') {
+     return respondMeta(request, response, responseCode, 'text/xml');
+   }
+  return respondMeta(request, response, responseCode, 'application/json');
 };
 
 const notFound = (request, response, acceptedTypes) => {
   const responsesMessage = {
-    message: 'Message: The page you are looking for was not found.',
-    id: 'ID: notFound',
+    message: 'The page you are looking for was not found.',
+    id: 'notFound',
   };
 
   if (acceptedTypes[0] === 'text/xml') {

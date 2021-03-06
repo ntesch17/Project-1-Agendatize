@@ -22,15 +22,13 @@ html, body {
 }
 
 #top {
-  margin-top: 200px;
+  margin-top: 20px;
   text-align: center;
- 
 }
 
 #content{
   display:grid;
   grid-template-columns: 25% 25% 25% 25%;
- 
 }
 
 #contentTitles{
@@ -38,11 +36,40 @@ html, body {
   grid-template-columns: 25% 25% 25% 25%;
 }
 
+#serverContentTitles{
+  display:grid;
+  grid-template-columns: 100%;
+}
+
+#controlsTitles{
+  display:grid;
+  grid-template-columns: 100%;
+}
+
+#serverResponses{
+  display:grid;
+  grid-template-columns: 100%;
+}
+
+#toDoTitle {
+  margin-top: 20px;
+  font-size: 2em;
+  text-align: center;
+  background-color: #DDBEA9;
+  color: #6b705c;
+}
 
 #doingTitle {
+  margin-top: 20px; 
+  font-size: 2em;
+  text-align: center;
+  background-color: #DDBEA9;
+  color: #6b705c;
+}
+
+#almostDoneTitle {
   margin-top: 20px;
-  
-  font-size: 1em;
+  font-size: 2em;
   text-align: center;
   background-color: #DDBEA9;
   color: #6b705c;
@@ -50,24 +77,21 @@ html, body {
 
 #doneTitle {
   margin-top: 20px;
-  font-size: 1em;
+  font-size: 2em;
   text-align: center;
   background-color: #DDBEA9;
   color: #6b705c;
 }
 
-#toDoTitle {
-  
+#serverTitle {
   margin-top: 20px;
-  
-  font-size: 1em;
- 
+  font-size: 2em;
   text-align: center;
   background-color: #DDBEA9;
   color: #6b705c;
 }
 
-#almostDoneTitle {
+#controlsTitle {
   margin-top: 20px;
   font-size: 1em;
   text-align: center;
@@ -76,16 +100,13 @@ html, body {
 }
 
 #doingContent {
-  
-
   height:400px;
   margin-top: 20px;
-  
   font-size: 1em;
   text-align: center;
   background-color: #F0EFEB;
   color: #6b705c;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 #doneContent {
@@ -94,7 +115,7 @@ html, body {
   text-align: center;
   background-color: #F0EFEB;
   color: #6b705c;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 #toDoContent {
@@ -105,7 +126,7 @@ html, body {
   text-align: center;
   background-color: #FFF1E6;
   color: #6b705c;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 #almostDoneContent {
@@ -114,9 +135,8 @@ html, body {
   text-align: center;
   background-color: #FFF1E6;
   color: #6b705c;
-  overflow: scroll;
+  overflow-y: scroll;
 }
-
 
 #serverContent {
   margin-top: 20px;
@@ -125,6 +145,4 @@ html, body {
   background-color: #F0EFEB;
   color: #6b705c;
   border: 8px solid #DDBEA9;
-  width:785px;
-  height:200px;
 }
