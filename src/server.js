@@ -6,7 +6,7 @@ const jsonHandler = require('./jsonResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-const handlePost = (request, response, parsedUrl,acceptedTypes) => {
+const handlePost = (request, response, parsedUrl, acceptedTypes) => {
   if (parsedUrl.pathname === '/addUser') {
     const body = [];
 
@@ -33,11 +33,11 @@ const handleGet = (request, response, parsedUrl, acceptedTypes) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
   } else if (parsedUrl.pathname === '/getUsers') {
-    jsonHandler.getUsers(request, response,acceptedTypes);
+    jsonHandler.getUsers(request, response, acceptedTypes);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else {
-    jsonHandler.notFound(request, response,acceptedTypes);
+    jsonHandler.notFound(request, response, acceptedTypes);
   }
 };
 

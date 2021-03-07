@@ -16,20 +16,12 @@ const respondMeta = (request, response, status, type) => {
 };
 
 const getUsers = (request, response, acceptedTypes) => {
-  let trueCount = true;
-  let count = 0;
-
-  if(trueCount){
-    count++;
-    trueCount = false;
-  }
-
   const responsesMessage = {
     message: 'Assignment Added!',
     assignment: `${JSON.stringify(assignment)}`,
 
   };
-  
+
   if (acceptedTypes[0] === 'text/xml') {
     let responseXML = '<response>';
     responseXML = `${responseXML} <message>${responsesMessage.message}</message>`;
@@ -52,13 +44,13 @@ const addUser = (request, response, body, acceptedTypes) => {
 
   if (!body.Title || !body.Description || !body.DueDate) {
     responsesMessage.id = 'Missing Params';
-    
+
     if (acceptedTypes[0] === 'text/xml') {
       let responseXML = '<response>';
       responseXML = `${responseXML} <message>${responsesMessage.message}</message>`;
       responseXML = `${responseXML} <id>${responsesMessage.id}</id>`;
       responseXML = `${responseXML} </response>`;
-  
+
       respond(request, response, 400, responseXML, 'text/xml');
       return respondMeta(request, response, 400, 'text/xml');
     }
@@ -66,12 +58,11 @@ const addUser = (request, response, body, acceptedTypes) => {
     const res = JSON.stringify(responsesMessage);
     respond(request, response, 400, res, 'application/json');
     return respondMeta(request, response, 400, 'application/json');
-    //respond(request, response, 400, responsesMessage, 'text/html');
-    //return respondMeta(request, response, 400, 'text/html');
+    // respond(request, response, 400, responsesMessage, 'text/html');
+    // return respondMeta(request, response, 400, 'text/html');
   }
 
   let responseCode = 201;
-
 
   if (assignment[body.Title]) {
     responseCode = 204;
@@ -92,7 +83,7 @@ const addUser = (request, response, body, acceptedTypes) => {
       responseXML = `${responseXML} <message>${responsesMessage.message}</message>`;
       responseXML = `${responseXML} <id>${responsesMessage.id}</id>`;
       responseXML = `${responseXML} </response>`;
-  
+
       respond(request, response, responseCode, responseXML, 'text/xml');
       return respondMeta(request, response, responseCode, 'text/xml');
     }
@@ -103,8 +94,8 @@ const addUser = (request, response, body, acceptedTypes) => {
   }
 
   if (acceptedTypes[0] === 'text/xml') {
-     return respondMeta(request, response, responseCode, 'text/xml');
-   }
+    return respondMeta(request, response, responseCode, 'text/xml');
+  }
   return respondMeta(request, response, responseCode, 'application/json');
 };
 

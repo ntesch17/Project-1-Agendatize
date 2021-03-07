@@ -16,25 +16,25 @@ let done = false;
  const parseJSON = (xhr,content) => {
 
 
-if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/html'){
-        const obj = JSON.parse(xhr.response);
-        const regex = /,(?!(([^"]*"){2})*[^"]*$)/;
-        //let rows = obj.trim().split("\n");
-        //content.innerHTML += `<p>${xhr.response}</p>`
-        
+// if(xhr.response !== "" && xhr.getResponseHeader('content-type') === 'text/html'){
+//         const obj = JSON.parse(xhr.response);
+      
+//         const titleField = assignmentForm.querySelector('#titleField');
+//       const descriptionField = assignmentForm.querySelector('#descriptionField');
+//       const dueDateField = assignmentForm.querySelector('#dueDateField');
+
+//         content.innerHTML += `<p>Assignment: ${titleField.value}</p>`
+//       content.innerHTML += `<p>Description: ${descriptionField.value}</p>`
+//       content.innerHTML += `<p>Due Date: ${dueDateField.value}</p>`
         
        
     
-        content.innerHTML += `<p>${xhr.response}</p>`
-    } 
+//         //content.innerHTML += `<p>${xhr.response}</p>`
+//     } 
 
     if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'application/json'){
         const obj = JSON.parse(xhr.response);
         
-        const regex = /,(?!(([^"]*"){2})*[^"]*$)/;
-        content.innerHTML += "\n";
-        //let rows = obj.trim().split("\n");
-        //content.innerHTML += `<p>${xhr.response}</p>`
         const titleField = assignmentForm.querySelector('#titleField');
       const descriptionField = assignmentForm.querySelector('#descriptionField');
       const dueDateField = assignmentForm.querySelector('#dueDateField');
@@ -42,20 +42,32 @@ if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/html')
         content.innerHTML += `<p>Assignment: ${titleField.value}</p>`
       content.innerHTML += `<p>Description: ${descriptionField.value}</p>`
       content.innerHTML += `<p>Due Date: ${dueDateField.value}</p>`
+        
+        
     
-      //const values = Object.values(obj);
-    //console.log(values);
-       //content.innerHTML += `<p>\n${values[1]}</p>`;
+      // const values = Object.values(obj);
+      // console.log(values);
+      // content.innerHTML += `<p>\n${values[1]}</p>`;
     } 
     if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/xml'){
-      const regex = /,(?!(([^"]*"){2})*[^"]*$)/;
-      // let obj = JSON.parse(xhr.response); 
-      // content.innerHTML += `<p>${xhr.response.assignment}</p>`
+     
+      // const p = document.createElement('p');
+      // // content.innerHTML += `<p>${xhr.response.assignment}</p>`
       
-      const assignment = xhr.responseXML.querySelector('assignment').textContent;
+      // const assignment = xhr.responseXML.querySelector('assignment').textContent;
+      // p.textContent = `${assignment}`;
+      // content.appendChild(p);
+      const titleField = assignmentForm.querySelector('#titleField');
+      const descriptionField = assignmentForm.querySelector('#descriptionField');
+      const dueDateField = assignmentForm.querySelector('#dueDateField');
+
+        content.innerHTML += `<p>Assignment: ${titleField.value}</p>`
+      content.innerHTML += `<p>Description: ${descriptionField.value}</p>`
+      content.innerHTML += `<p>Due Date: ${dueDateField.value}</p>`
+        
       //assignment.replace(regex, "");
      // const id = xhr.responseXML.querySelector('id').textContent;
-     content.innerHTML += `<p>${assignment}</p>`
+     //content.innerHTML += `<p>${assignment}</p>`
      // p.textContent = `${id}`;
      
       //content.appendChild(p);
@@ -122,15 +134,23 @@ if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/html')
         serverContent.innerHTML += `<p>Message: ${obj.message}</p>`;
         serverContent.innerHTML += `<p>Server Data Passed: ${xhr.response}</p>`;
       }
+
+      if(type === 'text/html'){
+        const obj = JSON.parse(xhr.response);
+        serverContent.innerHTML += `<p>Message: ${obj.message}</p>`;
+        serverContent.innerHTML += `<p>Server Data Passed: ${xhr.response}</p>`;
+      }
       // if(obj.message){
       //   serverContent.innerHTML += `<p>${obj.message}</p>`;
       //   }
         else if(type === 'text/xml'){
+          const p = document.createElement('p');
+          const p2 = document.createElement('p');
       
-      const message = xhr.responseXML.querySelector('message').textContent;
-     
+    
+      //serverContent.appendChild(p2);
       //const id = xhr.responseXML.querySelector('id').textContent;
-      serverContent.innerHTML += `<p>Message: ${message}</p>`;
+      //serverContent.innerHTML += `<p>Message: ${assignment}</p>`;
       serverContent.innerHTML += `<p>Server Data Passed: ${xhr.response}</p>`;
        // serverContent.innerHTML += `<p>${id}</p>`;
        
@@ -146,6 +166,7 @@ if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/html')
 
     const sendPost = (e, assignmentForm, type) => {
       e.preventDefault();
+      console.log(type);
       let content = document.querySelector("#toDoContent");
       const nameAction = assignmentForm.getAttribute('action');
       const nameMethod = assignmentForm.getAttribute('method');
