@@ -34,7 +34,7 @@ const addUser = (request, response, body, acceptedTypes) => {
 
   };
 
-  if (!body.Title || !body.Description || !body.DueDate) {
+  if (!body.Title || !body.Description || !body.DueDate|| !body.Column) {
     responsesMessage.id = 'Missing Params';
 
     const res = JSON.stringify(responsesMessage);
@@ -53,6 +53,7 @@ const addUser = (request, response, body, acceptedTypes) => {
 
   assignment[body.Title].DueDate = body.DueDate;
   assignment[body.Title].Description = body.Description;
+  assignment[body.Title].Column = body.Column;
 
   if (responseCode === 201) {
     responsesMessage.message = 'Created Successfuly!';
