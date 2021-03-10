@@ -3,7 +3,6 @@
 // Same when your heroku app shuts down from inactivity
 // We will be working with databases in the next few weeks.
 
-
 const assignment = {};
 
 const respond = (request, response, status, object, type) => {
@@ -20,21 +19,9 @@ const respondMeta = (request, response, status, type) => {
 const getUsers = (request, response, acceptedTypes) => {
   const responsesMessage = {
     message: 'Assignment Added!',
-    assignment: assignment,
+    assignment,
 
   };
-
-
-  //assignment.message = `Assignment Added!`;
-
-  // if (acceptedTypes[0] === 'text/xml') {
-  //   let responseXML = '<response>';
-  //   responseXML = `${responseXML} <message>${responsesMessage.message}</message>`;
-  //   responseXML = `${responseXML} <assignment>${responsesMessage.assignment}</assignment>`;
-  //   responseXML = `${responseXML} </response>`;
-  //   respond(request, response, 200, responseXML, 'text/xml');
-  //   return respondMeta(request, response, 200, 'text/xml');
-  // }
   const res = JSON.stringify(responsesMessage);
   respond(request, response, 200, res, 'application/json');
   return respondMeta(request, response, 200, 'application/json');
@@ -50,21 +37,9 @@ const addUser = (request, response, body, acceptedTypes) => {
   if (!body.Title || !body.Description || !body.DueDate) {
     responsesMessage.id = 'Missing Params';
 
-    // if (acceptedTypes[0] === 'text/xml') {
-    //   let responseXML = '<response>';
-    //   responseXML = `${responseXML} <message>${responsesMessage.message}</message>`;
-    //   responseXML = `${responseXML} <id>${responsesMessage.id}</id>`;
-    //   responseXML = `${responseXML} </response>`;
-
-    //   respond(request, response, 400, responseXML, 'text/xml');
-    //   return respondMeta(request, response, 400, 'text/xml');
-    // }
-
     const res = JSON.stringify(responsesMessage);
     respond(request, response, 400, res, 'application/json');
     return respondMeta(request, response, 400, 'application/json');
-    // respond(request, response, 400, responsesMessage, 'text/html');
-    // return respondMeta(request, response, 400, 'text/html');
   }
 
   let responseCode = 201;
@@ -83,16 +58,6 @@ const addUser = (request, response, body, acceptedTypes) => {
     responsesMessage.message = 'Created Successfuly!';
     responsesMessage.id = 'Success';
 
-    // if (acceptedTypes[0] === 'text/xml') {
-    //   let responseXML = '<response>';
-    //   responseXML = `${responseXML} <message>${responsesMessage.message}</message>`;
-    //   responseXML = `${responseXML} <id>${responsesMessage.id}</id>`;
-    //   responseXML = `${responseXML} </response>`;
-
-    //   respond(request, response, responseCode, responseXML, 'text/xml');
-    //   return respondMeta(request, response, responseCode, 'text/xml');
-    // }
-
     const res = JSON.stringify(responsesMessage);
     respond(request, response, responseCode, res, 'application/json');
     return respondMeta(request, response, responseCode, 'application/json');
@@ -109,16 +74,6 @@ const notFound = (request, response, acceptedTypes) => {
     message: 'The page you are looking for was not found.',
     id: 'notFound',
   };
-
-  // if (acceptedTypes[0] === 'text/xml') {
-  //   let responseXML = '<response>';
-  //   responseXML = `${responseXML} <message>${responsesMessage.message}</message>`;
-  //   responseXML = `${responseXML} <id>${responsesMessage.id}</id>`;
-  //   responseXML = `${responseXML} </response>`;
-
-  //   respond(request, response, 404, responseXML, 'text/xml');
-  //   return respondMeta(request, response, 404, 'text/xml');
-  // }
 
   const res = JSON.stringify(responsesMessage);
   respond(request, response, 404, res, 'application/json');

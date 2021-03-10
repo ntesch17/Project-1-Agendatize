@@ -12,124 +12,13 @@ let toDo = false;
 let doing = false;
 let almostDone = false;
 let done = false;
+let titleField;
+let descriptionField;
+let dueDateField;
+let line = '';
 
  const parseJSON = (xhr,content) => {
 
-
-// if(xhr.response !== "" && xhr.getResponseHeader('content-type') === 'text/html'){
-//         const obj = JSON.parse(xhr.response);
-      
-//         const titleField = assignmentForm.querySelector('#titleField');
-//       const descriptionField = assignmentForm.querySelector('#descriptionField');
-//       const dueDateField = assignmentForm.querySelector('#dueDateField');
-
-//         content.innerHTML += `<p>Assignment: ${titleField.value}</p>`
-//       content.innerHTML += `<p>Description: ${descriptionField.value}</p>`
-//       content.innerHTML += `<p>Due Date: ${dueDateField.value}</p>`
-        
-       
-    
-//         //content.innerHTML += `<p>${xhr.response}</p>`
-//     } 
-
-    if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'application/json'){
-        const obj = JSON.parse(xhr.response);
-        let count = 0;
-        
-      //   const titleField = assignmentForm.querySelector('#titleField');
-      // const descriptionField = assignmentForm.querySelector('#descriptionField');
-      // const dueDateField = assignmentForm.querySelector('#dueDateField');
-
-      //   content.innerHTML += `<p>Assignment: ${titleField.value}</p>`
-      // content.innerHTML += `<p>Description: ${descriptionField.value}</p>`
-      // content.innerHTML += `<p>Due Date: ${dueDateField.value}</p>`
-      if(obj.assignment){
-        console.log(obj);
-        
-        const keys = Object.keys(obj.assignment);
-        
-        console.log(keys);
-        for(let i = 0; i < keys.length; i++){
-          //if(keys[i] !== "message"){
-
-            let assignment = obj.assignment[keys[i]];
-            
-            content.innerHTML += `<p>Assignment</p>`;
-            content.innerHTML += `<p>Title: ${assignment.Title}</p>`;
-            content.innerHTML += `<p>Description: ${assignment.Description}</p>`;
-            content.innerHTML += `<p>Due Date: ${assignment.DueDate}</p>`;
-
-            let toDoButton = document.createElement("button");
-            toDoButton.innerHTML = "Switch to To Do Card";
-            content.appendChild(toDoButton);
-
-            let doingButton = document.createElement("button");
-            doingButton.innerHTML = "Switch to Doing Card";
-            content.appendChild(doingButton);
-
-            let almostDoneButton = document.createElement("button");
-            almostDoneButton.innerHTML = "Switch to Almost Done Card";
-            content.appendChild(almostDoneButton);
-
-            let doneButton = document.createElement("button");
-            doneButton.innerHTML = "Switch to Done Card";
-            content.appendChild(doneButton);
-           
-
-            toDoButton.addEventListener("click", function(){
-                toDo = true;
-                doing = false;
-          almostDone = false;
-          done = false;
-            });
-            doingButton.addEventListener("click", function(){
-                doing = true;
-                toDo = false;
-          almostDone = false;
-          done = false;
-            });
-            almostDoneButton.addEventListener("click", function(){
-                almostDone = true;
-                doing = false;
-          toDo = false;
-          done = false;
-            });
-            doneButton.addEventListener("click", function(){
-                done = true;
-                doing = false;
-          almostDone = false;
-          toDo = false;
-            });
-         // }
-        }
-      }
-    } 
-    // if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'text/xml'){
-     
-    //   const p = document.createElement('p');
-    //   // // content.innerHTML += `<p>${xhr.response.assignment}</p>`
-    //   if(xhr.responseXML.querySelector('assignment')){
-    //     const assignment = xhr.responseXML.querySelector('assignment').textContent;
-    //     console.log(assignment);
-    //     p.textContent = `${assignment}`;
-    //     content.appendChild(p);
-    //   }
-     
-    //   //const titleField = assignmentForm.querySelector('#titleField');
-    //   //const descriptionField = assignmentForm.querySelector('#descriptionField');
-    //   //const dueDateField = assignmentForm.querySelector('#dueDateField');
-
-    //    // content.innerHTML += `<p>Assignment: ${titleField.value}</p>`
-    //   //content.innerHTML += `<p>Description: ${descriptionField.value}</p>`
-    //  // content.innerHTML += `<p>Due Date: ${dueDateField.value}</p>`
-        
-    //   //assignment.replace(regex, "");
-    //  // const id = xhr.responseXML.querySelector('id').textContent;
-    //  //content.innerHTML += `<p>${assignment}</p>`
-    //  // p.textContent = `${id}`;
-     
-    //   //content.appendChild(p);
-    // } 
     };
 
   const handleResponse = (xhr) => {
@@ -174,52 +63,191 @@ let done = false;
         serverContent.innerHTML = `<b>Resource not found!</b>`;
           break;
       }
-     
+      //parseJSON(xhr, content);
+      if(xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'application/json'){
+        const obj = JSON.parse(xhr.response);
+       
+        titleField.value="";
+        descriptionField.value="";
+        dueDateField.value="";
+      //   const titleField = assignmentForm.querySelector('#titleField');
+      // const descriptionField = assignmentForm.querySelector('#descriptionField');
+      // const dueDateField = assignmentForm.querySelector('#dueDateField');
+
+      //   content.innerHTML += `<p>Assignment: ${titleField.value}</p>`
+      // content.innerHTML += `<p>Description: ${descriptionField.value}</p>`
+      // content.innerHTML += `<p>Due Date: ${dueDateField.value}</p>`
+      if(obj.assignment){
+        console.log(obj);
+        
+        const keys = Object.keys(obj.assignment);
+        
+        console.log(keys);
+        for(let i = 0; i < keys.length; i++){
+          //if(keys[i] !== "message"){
+           // line = '';
+            let assignment = obj.assignment[keys[i]];
+            
+           line += `<p>Assignment</p>`;
+           line += `<p>Title: ${assignment.Title}</p>`;
+           line+= `<p>Description: ${assignment.Description}</p>`;
+           line+= `<p>Due Date:   ${assignment.DueDate}</p>`;
+
+            content.innerHTML += line;
+            
+            
+
+            let toDoButton = document.createElement("button");
+            toDoButton.innerHTML = "Switch to To Do Card";
+            content.appendChild(toDoButton);
+
+            let doingButton = document.createElement("button");
+            doingButton.innerHTML = "Switch to Doing Card";
+            content.appendChild(doingButton);
+
+            let almostDoneButton = document.createElement("button");
+            almostDoneButton.innerHTML = "Switch to Almost Done Card";
+            content.appendChild(almostDoneButton);
+
+            let doneButton = document.createElement("button");
+            doneButton.innerHTML = "Switch to Done Card";
+            content.appendChild(doneButton);
+           
+            assignmentForm.addEventListener('submit', line = '');
+
+            toDoButton.addEventListener("click", function(){
+              //content.innerHTML += "";
+              content = document.querySelector("#toDoContent");
+              content.innerHTML += `<p>Assignment</p>`;
+              content.innerHTML += `<p>Title: ${assignment.Title}</p>`;
+             content.innerHTML += `<p>Description: ${assignment.Description}</p>`;
+             content.innerHTML += `<p>Due Date:   ${assignment.DueDate}</p>`;
+             let toDoButton = document.createElement("button");
+            toDoButton.innerHTML = "Switch to To Do Card";
+            content.appendChild(toDoButton);
+
+            let doingButton = document.createElement("button");
+            doingButton.innerHTML = "Switch to Doing Card";
+            content.appendChild(doingButton);
+
+            let almostDoneButton = document.createElement("button");
+            almostDoneButton.innerHTML = "Switch to Almost Done Card";
+            content.appendChild(almostDoneButton);
+
+            let doneButton = document.createElement("button");
+            doneButton.innerHTML = "Switch to Done Card";
+            content.appendChild(doneButton);
+                // toDo = true;
+                // doing = false;
+                // almostDone = false;
+                // done = false;
+            });
+            doingButton.addEventListener("click", function(){
+              content = document.querySelector("#doingContent");
+              content.innerHTML += `<p>Assignment</p>`;
+            content.innerHTML += `<p>Title: ${assignment.Title}</p>`;
+            content.innerHTML += `<p>Description: ${assignment.Description}</p>`;
+            content.innerHTML += `<p>Due Date:   ${assignment.DueDate}</p>`;
+
+            let toDoButton = document.createElement("button");
+            toDoButton.innerHTML = "Switch to To Do Card";
+            content.appendChild(toDoButton);
+
+            let doingButton = document.createElement("button");
+            doingButton.innerHTML = "Switch to Doing Card";
+            content.appendChild(doingButton);
+
+            let almostDoneButton = document.createElement("button");
+            almostDoneButton.innerHTML = "Switch to Almost Done Card";
+            content.appendChild(almostDoneButton);
+
+            let doneButton = document.createElement("button");
+            doneButton.innerHTML = "Switch to Done Card";
+            content.appendChild(doneButton);
+              
+            
+          //       doing = true;
+          //       toDo = false;
+          // almostDone = false;
+          // done = false;
+            });
+            almostDoneButton.addEventListener("click", function(){
+              content = document.querySelector("#almostDoneContent");
+              content.innerHTML += `<p>Assignment</p>`;
+            content.innerHTML += `<p>Title: ${assignment.Title}</p>`;
+            content.innerHTML += `<p>Description: ${assignment.Description}</p>`;
+            content.innerHTML += `<p>Due Date:   ${assignment.DueDate}</p>`;
+
+            let toDoButton = document.createElement("button");
+            toDoButton.innerHTML = "Switch to To Do Card";
+            content.appendChild(toDoButton);
+
+            let doingButton = document.createElement("button");
+            doingButton.innerHTML = "Switch to Doing Card";
+            content.appendChild(doingButton);
+
+            let almostDoneButton = document.createElement("button");
+            almostDoneButton.innerHTML = "Switch to Almost Done Card";
+            content.appendChild(almostDoneButton);
+
+            let doneButton = document.createElement("button");
+            doneButton.innerHTML = "Switch to Done Card";
+            content.appendChild(doneButton);
+          //       almostDone = true;
+          //       doing = false;
+          // toDo = false;
+          // done = false;
+            });
+            doneButton.addEventListener("click", function(){
+              content = document.querySelector("#doneContent");
+              content.innerHTML += `<p>Assignment</p>`;
+            content.innerHTML += `<p>Title: ${assignment.Title}</p>`;
+            content.innerHTML += `<p>Description: ${assignment.Description}</p>`;
+            content.innerHTML += `<p>Due Date:   ${assignment.DueDate}</p>`;
+
+            let toDoButton = document.createElement("button");
+            toDoButton.innerHTML = "Switch to To Do Card";
+            content.appendChild(toDoButton);
+
+            let doingButton = document.createElement("button");
+            doingButton.innerHTML = "Switch to Doing Card";
+            content.appendChild(doingButton);
+
+            let almostDoneButton = document.createElement("button");
+            almostDoneButton.innerHTML = "Switch to Almost Done Card";
+            content.appendChild(almostDoneButton);
+
+            let doneButton = document.createElement("button");
+            doneButton.innerHTML = "Switch to Done Card";
+            content.appendChild(doneButton);
+          //       done = true;
+          //       doing = false;
+          // almostDone = false;
+          // toDo = false;
+            });
+         // }
+        }
+      }
+    } 
+
       if(type === 'application/json'){
         const obj = JSON.parse(xhr.response);
         serverContent.innerHTML += `<p>Message: ${obj.message}</p>`;
         serverContent.innerHTML += `<p>Server Data Passed: ${xhr.response}</p>`;
       }
 
-      // if(type === 'text/html'){
-      //   const obj = JSON.parse(xhr.response);
-      //   serverContent.innerHTML += `<p>Message: ${obj.message}</p>`;
-      //   serverContent.innerHTML += `<p>Server Data Passed: ${xhr.response}</p>`;
-      // }
-      // // if(obj.message){
-      // //   serverContent.innerHTML += `<p>${obj.message}</p>`;
-      // //   }
-      //   else if(type === 'text/xml'){
-      //     const p = document.createElement('p');
-      //     const p2 = document.createElement('p');
-      
-    
-      // //serverContent.appendChild(p2);
-      // //const id = xhr.responseXML.querySelector('id').textContent;
-      // //serverContent.innerHTML += `<p>Message: ${assignment}</p>`;
-      // serverContent.innerHTML += `<p>Server Data Passed: ${xhr.response}</p>`;
-      //  // serverContent.innerHTML += `<p>${id}</p>`;
-       
-      // //content.appendChild(p);
-      // }
-        //let assignment = JSON.stringify(obj.assignment);
-       
-
-      parseJSON(xhr, content);
-    
-      
     }
 
     const sendPost = (e, assignmentForm, type) => {
       e.preventDefault();
       console.log(type);
-      let content = document.querySelector("#toDoContent");
+     
       const nameAction = assignmentForm.getAttribute('action');
       const nameMethod = assignmentForm.getAttribute('method');
 
-      const titleField = assignmentForm.querySelector('#titleField');
-      const descriptionField = assignmentForm.querySelector('#descriptionField');
-      const dueDateField = assignmentForm.querySelector('#dueDateField');
+       titleField = assignmentForm.querySelector('#titleField');
+       descriptionField = assignmentForm.querySelector('#descriptionField');
+       dueDateField = assignmentForm.querySelector('#dueDateField');
 
       const xhr = new XMLHttpRequest();
       xhr.open(nameMethod, nameAction);
@@ -232,6 +260,7 @@ let done = false;
       
       const formData = `Title=${titleField.value}&Description=${descriptionField.value}&DueDate=${dueDateField.value}`;
       xhr.send(formData);
+      
      // console.log(titleField.value)
       //content.innerHTML += `<p>${titleField.value}</p>`
       return false;
@@ -241,12 +270,12 @@ let done = false;
       e.preventDefault();
         const xhr = new XMLHttpRequest();
 
-        if(head === false){
+        //if(head === false){
             xhr.open('GET', url);
-        }
-        if(head === true){
-          xhr.open('HEAD', url);
-        }
+        //}
+        //if(head === true){
+        //  xhr.open('HEAD', url);
+        //}
         xhr.setRequestHeader('Accept', acceptedType);
 
         xhr.onload = () => handleResponse(xhr);
@@ -288,24 +317,24 @@ let done = false;
         }
       }
 
-      const urlForm = document.querySelector('#urlField').onchange=e=>{
-        url = e.target.value;
-      }
-      const methodForm = document.querySelector('#methodSelect').onchange=e=>{
-        if(e.target.value == 'head'){
-          head = true;
-        }
-        else{
-          head = false;
-        }
-      }
+      // const urlForm = document.querySelector('#urlField').onchange=e=>{
+      //   url = e.target.value;
+      // }
+      // const methodForm = document.querySelector('#methodSelect').onchange=e=>{
+      //   if(e.target.value == 'head'){
+      //     head = true;
+      //   }
+      //   else{
+      //     head = false;
+      //   }
+      // }
 
       // document.querySelector("#typeField").onchange = (e) => {
       //   type = e.target.value;
       // }
       const addUser = (e) => sendPost(e, assignmentForm, 'application/json');
-      const getUser = (e) => sendAjax(e, url, 'application/json');
-      userForm.addEventListener('submit', getUser);
+      const getUser = (e) => sendAjax(e, '/getUsers', 'application/json');
+      assignmentForm.addEventListener('submit', getUser);
       assignmentForm.addEventListener('submit', addUser);
       
     };
@@ -404,9 +433,9 @@ let done = false;
         <option value="font/woff">Font: Woff</option>
         <option value="font/woff2">Font: Woff 2</option>
       </select> -->
-      <input type="submit" value="Add User" />
+      <input type="submit" value="Add the Assignment!" />
     </form>
-    <form id="userForm" action="/getUsers" method="get">
+    <!-- <form id="userForm" action="/getUsers" method="get">
       <select id='urlField'>
         <option selected>Select a URL</option>
         <option value='/getUsers'>/getUsers</option>
@@ -418,7 +447,7 @@ let done = false;
         <option value="head">HEAD</option>
       </select>
       <input type="submit" value="Get User" />
-    </form>
+    </form> -->
   </section>
  
 </body>
