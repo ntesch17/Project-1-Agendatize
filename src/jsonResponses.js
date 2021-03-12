@@ -1,7 +1,4 @@
-// Note this object is purely in memory
-// When node shuts down this will be cleared.
-// Same when your heroku app shuts down from inactivity
-// We will be working with databases in the next few weeks.
+
 
 const assignment = {};
 
@@ -64,9 +61,15 @@ const addUser = (request, response, body, acceptedTypes) => {
     return respondMeta(request, response, responseCode, 'application/json');
   }
 
-  // if (acceptedTypes[0] === 'text/xml') {
-  //   return respondMeta(request, response, responseCode, 'text/xml');
-  // }
+  else if (responseCode === 204) {
+    responsesMessage.message = 'Assignment has been updated!';
+    responsesMessage.id = 'Update (No Content)';
+
+    const res = JSON.stringify(responsesMessage);
+    respond(request, response, responseCode, res, 'application/json');
+    return respondMeta(request, response, responseCode, 'application/json');
+  }
+
   return respondMeta(request, response, responseCode, 'application/json');
 };
 

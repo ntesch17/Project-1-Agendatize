@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Agendatize</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
 
-let head = false;
-let toDo = false;
-let doing = false;
-let almostDone = false;
-let done = false;
 let titleField;
 let descriptionField;
-let dueDateField;
-
-
+let dueDateField,content;
 
   const handleResponse = (xhr) => {
   
@@ -51,74 +45,41 @@ let dueDateField;
 
           console.log(keys);
           for (let i = 0; i < keys.length; i++) {
-            //if(keys[i] !== "message"){
-            // line = '';
+            let assignDiv = document.createElement('div');
             let assignment = obj.assignment[keys[i]];
-            let line = "";
-            line += `<p>Assignment</p>`;
-            line += `<p>Title: ${assignment.Title}</p>`;
-            line += `<p>Description: ${assignment.Description}</p>`;
-            line += `<p>Due Date:   ${assignment.DueDate}</p>`;
+            
+            let assignmentDetails = document.createElement("p");
+            assignmentDetails.innerHTML = `<p>Assignment</p>`;
+            assignmentDetails.innerHTML += `<p>Title: ${assignment.Title}</p>`;
+            assignmentDetails.innerHTML += `<p>Description: ${assignment.Description}</p>`;
+            assignmentDetails.innerHTML += `<p>Due Date:   ${assignment.DueDate}</p>`;
+            
+            assignDiv.appendChild(assignmentDetails);
+            
+            generateAssignButton(assignDiv, "Switch to To Do Card", "To Do", assignment);
+            generateAssignButton(assignDiv, "Switch to Doing Card", "Doing", assignment);
+            generateAssignButton(assignDiv, "Switch to Almost Done Card", "Almost Done", assignment);
+            generateAssignButton(assignDiv, "Switch to Done Card", "Done", assignment);
 
-            let content;
+            // let deleteButton = document.createElement("button");
+            // deleteButton.id = `delete-${assignment.Title}`;
+            // deleteButton.innerHTML = "Delete Assignment";
+            // assignDiv.appendChild(deleteButton);
+            // console.log(xhr.status);
 
+            
             switch(assignment.Column) {
               case 'To Do': content = toDoContent; break;
               case 'Doing': content = doingContent; break;
               case 'Almost Done': content = almostDoneContent; break;
               default: content = doneContent; break;
             }
-
-            content.innerHTML += line;
-            console.dir(content);
-
-            let toDoButton = document.createElement("button");
-            toDoButton.id = `toDo-${assignment.Title}`;
-            toDoButton.innerHTML = "Switch to To Do Card";
-            content.appendChild(toDoButton);
-
-            document.querySelector(`#toDo-${assignment.Title}`).addEventListener('click', () => {
-              updateAssignment(assignment.Title, assignment.Description, assignment.DueDate, 'To Do');
-            });
-
-
-            let doingButton = document.createElement("button");
-            doingButton.id = `doing-${assignment.Title}`;
-            doingButton.innerHTML = "Switch to Doing Card";
-            content.appendChild(doingButton);
-
-            document.querySelector(`#doing-${assignment.Title}`).addEventListener('click', () => {
-              updateAssignment(assignment.Title, assignment.Description, assignment.DueDate, 'Doing');
-            });
-
-
-            let almostDoneButton = document.createElement("button");
-            almostDoneButton.id = `almostDone-${assignment.Title}`;
-            almostDoneButton.innerHTML = "Switch to Almost Done Card";
-            content.appendChild(almostDoneButton);
-
-            document.querySelector(`#almostDone-${assignment.Title}`).addEventListener('click', () => {
-              updateAssignment(assignment.Title, assignment.Description, assignment.DueDate, 'Almost Done');
-            });
-
-
-            let doneButton = document.createElement("button");
-            doneButton.id = `done-${assignment.Title}`;
-            doneButton.innerHTML = "Switch to Done Card";
-            content.appendChild(doneButton);
-
-            document.querySelector(`#done-${assignment.Title}`).addEventListener('click', () => {
-              updateAssignment(assignment.Title, assignment.Description, assignment.DueDate, 'Done');
-            });
             
-            let deleteButton = document.createElement("button");
-            deleteButton.id = `delete-${assignment.Title}`;
-            deleteButton.innerHTML = "Delete Assignment";
-            content.appendChild(deleteButton);
-            console.log(xhr.status);
-            document.querySelector(`#delete-${assignment.Title}`).addEventListener('click', () => {
+            content.appendChild(assignDiv);
+            
+            // document.querySelector(`#delete-${assignment.Title}`).addEventListener('click', () => {
                
-            });
+            // });   
           }
         }
       }
@@ -129,26 +90,17 @@ let dueDateField;
         serverContent.innerHTML += `<p>Message: ${obj.message}</p>`;
         serverContent.innerHTML += `<p>Server Data Passed: ${xhr.response}</p>`;
       }
-    //   switch(xhr.status) {
-      
-    //   case 200: //if success
-    //   serverContent.innerHTML = `<b>Success!</b>`;
-    //     break;
-    //   case 201: //if created
-    //   serverContent.innerHTML = '<b>Created!</b>';
-    //     break;
-    //   case 204: //if update request
-    //   serverContent.innerHTML = `<b>Updated (No Content)!</b>`;
-    //     break;
-    //   case 400: //if Bad Request
-    //   serverContent.innerHTML = `<b>Bad Request!</b>`;
-    //     break;
-    //   default: //any other status
-    //   serverContent.innerHTML = `<b>Resource not found!</b>`;
-    //     break;
-    // }
 
     }
+  
+  const generateAssignButton = (container, text, column, assignment) => {
+    let button = document.createElement("button");
+    button.innerHTML = text;
+    button.addEventListener('click', () => {
+      updateAssignment(assignment.Title, assignment.Description, assignment.DueDate, column);
+    });
+    container.appendChild(button);
+  };
 
     const sendPost = (e, assignmentForm, type) => {
       e.preventDefault();
@@ -163,7 +115,7 @@ let dueDateField;
       xhr.setRequestHeader('Accept', type);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-      xhr.onload = () => { sendAjax('/getUsers', 'application/json'); }
+      xhr.onload = () => { sendAjax('/getAssignments', 'application/json'); }
 
       let formData = `Title=${titleField.value}&Description=${descriptionField.value}&DueDate=${dueDateField.value}`;
       formData += `&Column=${document.querySelector('#cardField').value}`;
@@ -174,13 +126,13 @@ let dueDateField;
 
     const updateAssignment = (title, description, dueDate, column) => {
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', '/addUser');
+      xhr.open('POST', '/addAssignments');
 
       console.dir(`Updating: ${title}`);
 
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-      xhr.onload = () => { sendAjax('/getUsers', 'application/json'); }
+      xhr.onload = () => { sendAjax('/getAssignments', 'application/json'); }
 
       const formData = `Title=${title}&Description=${description}&DueDate=${dueDate}&Column=${column}`;
       xhr.send(formData);
@@ -190,7 +142,7 @@ let dueDateField;
     
     const sendAjax = ( url, acceptedType) => {
         let xhr = new XMLHttpRequest();
-        console.log(xhr.status);
+        
         xhr.open('GET', url);
        
         xhr.setRequestHeader('Accept', acceptedType);
@@ -212,87 +164,79 @@ let dueDateField;
 
       const addUser = (e) => sendPost(e, assignmentForm, 'application/json');
       assignmentForm.addEventListener('submit', addUser);
-      sendAjax('/getUsers', 'application/json');
+      sendAjax('/getAssignments', 'application/json');
     };
 
     window.onload = init;
 
   </script>
 </head>
+
 <body>
-<header>
-  <h1 id = "title">Agendatize!</h1>
-  <h3 id = "author">By: Nicholas Tesch</h3>
-</header>
+  <header>
+    <h1 id="title">Agendatize!</h1>
+    <h3 id="author">By: Nicholas Tesch</h3>
+  </header>
 
-<div id = "contentTitles">
-</section>
-<h3 id = "toDoTitle">To Do: </h3>
-</section>
-</section>
-<h3 id = "doingTitle">Doing: </h3>
-</section>
-</section>
-<h3 id = "almostDoneTitle">Almost Done: </h3>
-</section>
-</section>
-<h3 id = "doneTitle">Done: </h3>
-</section>
-</div>
+  <div id="contentTitles">
+    </section>
+    <h3 id="toDoTitle">To Do: </h3>
+    </section>
+    </section>
+    <h3 id="doingTitle">Doing: </h3>
+    </section>
+    </section>
+    <h3 id="almostDoneTitle">Almost Done: </h3>
+    </section>
+    </section>
+    <h3 id="doneTitle">Done: </h3>
+    </section>
+  </div>
 
-<div id = "content">
-</section>
-<section id="toDoContent">
+  <div id="content">
+    </section>
+    <section id="toDoContent">
 
-</section>
+    </section>
 
-</section>
-<section id="doingContent">
-</section>
-</section>
-<section id="almostDoneContent">
-</section>
-</section>
-<section id="doneContent">
-</section>
-</div>
+    </section>
+    <section id="doingContent">
+    </section>
+    </section>
+    <section id="almostDoneContent">
+    </section>
+    </section>
+    <section id="doneContent">
+    </section>
+  </div>
 
 
-<div id = "serverContentTitles">
-</section>
-<h3 id = "serverTitle">Server Content: </h3>
-</section>
-</div>
+  <div id="serverContentTitles">
+    </section>
+    <h3 id="serverTitle">Server Content: </h3>
+    </section>
+  </div>
 
-<div id = "serverResponses">
-</section>
-<section id="serverContent">
-</section>
-</div>
+  <div id="serverResponses">
+    </section>
+    <section id="serverContent">
+    </section>
+  </div>
 
   <div id="controlsTitle">
     <section>
-    <h3 id = "controlsTitle">Agendatize Controls: </h3>
-  </section>
+      <h3 id="controlsTitle">Agendatize Controls: </h3>
+    </section>
   </div>
   <section id="top">
-    
-  
-    <!-- <form id="nameForm" action="/addUser" method="post">
-      <label for="name">Name: </label>
-      <input id="nameField" type="text" name="name" />
-      <label for="age">Age: </label>
-      <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
-      <input type="submit" value="Add User" />
-    </form> -->
-    <form id="assignmentForm" action="/addUser" method="post">
+    <form id="assignmentForm" action="/addAssignments" method="post">
       <label for="title">Assignment Title: </label>
       <input id="titleField" type="text" name="title" />
       <label for="description">Assignment Description: </label>
       <input id="descriptionField" type="text" name="description" />
       <label for="dueDate">Assignment Due Date:</label>
       <input type="date" id="dueDateField" name="dueDate">
-      
+
       <select id='cardField'>
         <option selected>Select a Card to place Assignment Under</option>
         <option value='To Do'>To Do Section</option>
@@ -300,31 +244,9 @@ let dueDateField;
         <option value='Almost Done'>Almost Done Section</option>
         <option value='Done'>Done Section</option>
       </select>
-
-      <!-- <select id="typeField">
-        <option selected>Select a type</option>
-        <option value="application/json">JSON</option>
-        <option value="text/xml">XML</option>
-        <option value="text/html">HTML</option>
-        <option value="font/woff">Font: Woff</option>
-        <option value="font/woff2">Font: Woff 2</option>
-      </select> -->
       <input type="submit" value="Add the Assignment!" />
-    </form>
-    <!-- <form id="userForm" action="/getUsers" method="get">
-      <select id='urlField'>
-        <option selected>Select a URL</option>
-        <option value='/getUsers'>/getUsers</option>
-        <option value='/notReal'>/notReal</option>
-      </select>
-      <select id="methodSelect">
-        <option selected>Select a METHOD</option>
-        <option value="get">GET</option>
-        <option value="head">HEAD</option>
-      </select>
-      <input type="submit" value="Get User" />
-    </form> -->
   </section>
- 
+
 </body>
+
 </html>
