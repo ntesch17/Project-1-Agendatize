@@ -2,29 +2,29 @@
 
 const assignment = {};
 
-const respond = (request, response, status, object, type) => {
-  response.writeHead(status, { 'Content-Type': type });
-  response.write(object);
+const respond = (request, response, status, object) => {
+  response.writeHead(status, { 'Content-Type': 'application/json' });
+  response.write(JSON.stringify(object));
   response.end();
 };
 
-const respondMeta = (request, response, status, type) => {
-  response.writeHead(status, { 'Content-Type': type });
+const respondMeta = (request, response, status) => {
+  response.writeHead(status, { 'Content-Type':  'application/json'});
   response.end();
 };
 
-const getUsers = (request, response, acceptedTypes) => {
+const getAssignment = (request, response, acceptedTypes) => {
   const responsesMessage = {
     message: 'Assignment Added!',
     assignment,
 
   };
-  const res = JSON.stringify(responsesMessage);
-  respond(request, response, 200, res, 'application/json');
-  return respondMeta(request, response, 200, 'application/json');
+
+  respond(request, response, 200, responsesMessage);
+  return respondMeta(request, response, 200);
 };
 
-const addUser = (request, response, body, acceptedTypes) => {
+const addAssignment = (request, response, body, acceptedTypes) => {
   const responsesMessage = {
     message: 'The Assignments title, description, and due date are all required',
     id: 'Bad Request',
@@ -34,9 +34,9 @@ const addUser = (request, response, body, acceptedTypes) => {
   if (!body.Title || !body.Description || !body.DueDate|| !body.Column) {
     responsesMessage.id = 'Missing Params';
 
-    const res = JSON.stringify(responsesMessage);
-    respond(request, response, 400, res, 'application/json');
-    return respondMeta(request, response, 400, 'application/json');
+    
+    respond(request, response, 400, responsesMessage);
+    return respondMeta(request, response, 400);
   }
 
   let responseCode = 201;
@@ -56,22 +56,23 @@ const addUser = (request, response, body, acceptedTypes) => {
     responsesMessage.message = 'Created Successfuly!';
     responsesMessage.id = 'Success';
 
-    const res = JSON.stringify(responsesMessage);
-    respond(request, response, responseCode, res, 'application/json');
-    return respondMeta(request, response, responseCode, 'application/json');
+    respond(request, response, responseCode, responsesMessage);
+    return respondMeta(request, response, responseCode);
   }
 
-  else if (responseCode === 204) {
-    responsesMessage.message = 'Assignment has been updated!';
-    responsesMessage.id = 'Update (No Content)';
-
-    const res = JSON.stringify(responsesMessage);
-    respond(request, response, responseCode, res, 'application/json');
-    return respondMeta(request, response, responseCode, 'application/json');
-  }
-
-  return respondMeta(request, response, responseCode, 'application/json');
+ 
+  return respondMeta(request, response, responseCode);
 };
+
+const deleteAssignment = (request, response, body, acceptedTypes) => {
+  console.log('here');
+
+  delete body.Title;
+  delete body.Description;
+  delete body.DueDate;
+  delete body.Column;
+
+}
 
 const notFound = (request, response, acceptedTypes) => {
   const responsesMessage = {
@@ -79,13 +80,14 @@ const notFound = (request, response, acceptedTypes) => {
     id: 'notFound',
   };
 
-  const res = JSON.stringify(responsesMessage);
-  respond(request, response, 404, res, 'application/json');
-  return respondMeta(request, response, 404, 'application/json');
+  
+  respond(request, response, 404, responsesMessage);
+  return respondMeta(request, response, 404);
 };
 
 module.exports = {
-  getUsers,
-  addUser,
+  getAssignment,
+  addAssignment,
+  deleteAssignment,
   notFound,
 };

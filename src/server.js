@@ -7,8 +7,9 @@ const jsonHandler = require('./jsonResponses.js');
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const handlePost = (request, response, parsedUrl, acceptedTypes) => {
+  const body = [];
   if (parsedUrl.pathname === '/addAssignments') {
-    const body = [];
+    //const body = [];
 
     request.on('error', (err) => {
       console.dir(err);
@@ -24,16 +25,20 @@ const handlePost = (request, response, parsedUrl, acceptedTypes) => {
       const bodyString = Buffer.concat(body).toString();
       const bodyParams = query.parse(bodyString);
 
-      jsonHandler.addUser(request, response, bodyParams, acceptedTypes);
+      jsonHandler.addAssignment(request, response, bodyParams, acceptedTypes);
     });
   }
+
+  
 };
 
 const handleGet = (request, response, parsedUrl, acceptedTypes) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
   } else if (parsedUrl.pathname === '/getAssignments') {
-    jsonHandler.getUsers(request, response, acceptedTypes);
+    jsonHandler.getAssignment(request, response, acceptedTypes);
+  }else if (parsedUrl.pathname === '/deleteAssignment') {
+  jsonHandler.deleteAssignment(request, response, parsedUrl, acceptedTypes);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else {

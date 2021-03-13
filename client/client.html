@@ -4,13 +4,16 @@
 <head>
   <title>Agendatize</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
-
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Ranchers&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
 
 let titleField;
 let descriptionField;
 let dueDateField,content;
+let deletes = false;
+
 
   const handleResponse = (xhr) => {
   
@@ -61,11 +64,11 @@ let dueDateField,content;
             generateAssignButton(assignDiv, "Switch to Almost Done Card", "Almost Done", assignment);
             generateAssignButton(assignDiv, "Switch to Done Card", "Done", assignment);
 
-            // let deleteButton = document.createElement("button");
-            // deleteButton.id = `delete-${assignment.Title}`;
-            // deleteButton.innerHTML = "Delete Assignment";
-            // assignDiv.appendChild(deleteButton);
-            // console.log(xhr.status);
+             let deleteButton = document.createElement("button");
+             deleteButton.id = `delete-${assignment.Title}`;
+             deleteButton.innerHTML = "Delete Assignment";
+             assignDiv.appendChild(deleteButton);
+           
 
             
             switch(assignment.Column) {
@@ -77,9 +80,10 @@ let dueDateField,content;
             
             content.appendChild(assignDiv);
             
-            // document.querySelector(`#delete-${assignment.Title}`).addEventListener('click', () => {
-               
-            // });   
+             deleteButton.addEventListener('click', () => {
+              assignmentDetails.innerHTML = '';
+                sendAjax(`/deleteAssignment?Title=${assignment.Title}`, 'application/json');
+             });   
           }
         }
       }
@@ -142,8 +146,12 @@ let dueDateField,content;
     
     const sendAjax = ( url, acceptedType) => {
         let xhr = new XMLHttpRequest();
-        
-        xhr.open('GET', url);
+        //if(deletes == true){
+         // xhr.open('DELETE', url);
+        //}
+        //else{
+          xhr.open('GET', url);
+     //   }
        
         xhr.setRequestHeader('Accept', acceptedType);
 
