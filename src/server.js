@@ -6,6 +6,7 @@ const jsonHandler = require('./jsonResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
+//Handles post
 const handlePost = (request, response, parsedUrl) => {
   const body = [];
   if (parsedUrl.pathname === '/addAssignments') {
@@ -30,6 +31,7 @@ const handlePost = (request, response, parsedUrl) => {
   }
 };
 
+//Handles get
 const handleGet = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
@@ -42,6 +44,7 @@ const handleGet = (request, response, parsedUrl) => {
   }
 };
 
+//Handles requests
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
   if (request.method === 'POST') {
