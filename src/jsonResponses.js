@@ -1,19 +1,20 @@
-
-
 const assignment = {};
 
+// Sends the server responses
 const respond = (request, response, status, object) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
   response.write(JSON.stringify(object));
   response.end();
 };
 
+// Sends the server head responses
 const respondMeta = (request, response, status) => {
-  response.writeHead(status, { 'Content-Type':  'application/json'});
+  response.writeHead(status, { 'Content-Type': 'application/json' });
   response.end();
 };
 
-const getAssignment = (request, response, acceptedTypes) => {
+// Gets the assignmnet and establishes that its been added
+const getAssignment = (request, response) => {
   const responsesMessage = {
     message: 'Assignment Added!',
     assignment,
@@ -24,17 +25,17 @@ const getAssignment = (request, response, acceptedTypes) => {
   return respondMeta(request, response, 200);
 };
 
-const addAssignment = (request, response, body, acceptedTypes) => {
+// Adds the assignmnet and checks if params are met
+const addAssignment = (request, response, body) => {
   const responsesMessage = {
     message: 'The Assignments title, description, and due date are all required',
     id: 'Bad Request',
 
   };
 
-  if (!body.Title || !body.Description || !body.DueDate|| !body.Column) {
+  if (!body.Title || !body.Description || !body.DueDate || !body.Column) {
     responsesMessage.id = 'Missing Params';
 
-    
     respond(request, response, 400, responsesMessage);
     return respondMeta(request, response, 400);
   }
@@ -60,27 +61,16 @@ const addAssignment = (request, response, body, acceptedTypes) => {
     return respondMeta(request, response, responseCode);
   }
 
- 
   return respondMeta(request, response, responseCode);
 };
 
-const deleteAssignment = (request, response, body, acceptedTypes) => {
-  console.log('here');
-
-  delete body.Title;
-  delete body.Description;
-  delete body.DueDate;
-  delete body.Column;
-
-}
-
-const notFound = (request, response, acceptedTypes) => {
+// if page not found display 404
+const notFound = (request, response) => {
   const responsesMessage = {
     message: 'The page you are looking for was not found.',
     id: 'notFound',
   };
 
-  
   respond(request, response, 404, responsesMessage);
   return respondMeta(request, response, 404);
 };
@@ -88,6 +78,5 @@ const notFound = (request, response, acceptedTypes) => {
 module.exports = {
   getAssignment,
   addAssignment,
-  deleteAssignment,
   notFound,
 };

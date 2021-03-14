@@ -6,10 +6,10 @@ const jsonHandler = require('./jsonResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-const handlePost = (request, response, parsedUrl, acceptedTypes) => {
+const handlePost = (request, response, parsedUrl) => {
   const body = [];
   if (parsedUrl.pathname === '/addAssignments') {
-    //const body = [];
+    // const body = [];
 
     request.on('error', (err) => {
       console.dir(err);
@@ -25,34 +25,29 @@ const handlePost = (request, response, parsedUrl, acceptedTypes) => {
       const bodyString = Buffer.concat(body).toString();
       const bodyParams = query.parse(bodyString);
 
-      jsonHandler.addAssignment(request, response, bodyParams, acceptedTypes);
+      jsonHandler.addAssignment(request, response, bodyParams);
     });
   }
-
-  
 };
 
-const handleGet = (request, response, parsedUrl, acceptedTypes) => {
+const handleGet = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
   } else if (parsedUrl.pathname === '/getAssignments') {
-    jsonHandler.getAssignment(request, response, acceptedTypes);
-  }else if (parsedUrl.pathname === '/deleteAssignment') {
-  jsonHandler.deleteAssignment(request, response, parsedUrl, acceptedTypes);
+    jsonHandler.getAssignment(request, response);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else {
-    jsonHandler.notFound(request, response, acceptedTypes);
+    jsonHandler.notFound(request, response);
   }
 };
 
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
-  const acceptedTypes = request.headers.accept.split(',');
   if (request.method === 'POST') {
-    handlePost(request, response, parsedUrl, acceptedTypes);
+    handlePost(request, response, parsedUrl);
   } else {
-    handleGet(request, response, parsedUrl, acceptedTypes);
+    handleGet(request, response, parsedUrl);
   }
 };
 

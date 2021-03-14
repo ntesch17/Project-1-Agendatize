@@ -9,6 +9,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
 
+//Global declarations
 let titleField;
 let descriptionField;
 let dueDateField,content;
@@ -16,41 +17,40 @@ let deletes = false;
 
 
   const handleResponse = (xhr) => {
-  
+
+    //Reset Controls
+    titleField.value='';
+    descriptionField.value='';
+    dueDateField.value='';
+    document.querySelector('#cardField').value = 'Select a Card to place Assignment Under';
+
+  //Collecting content querys
   let toDoContent = document.querySelector('#toDoContent');
   let doingContent = document.querySelector('#doingContent');
   let almostDoneContent = document.querySelector('#almostDoneContent');
   let doneContent = document.querySelector('#doneContent');
 
+  //Resets content
   toDoContent.innerHTML='';
   doingContent.innerHTML='';
   almostDoneContent.innerHTML='';
   doneContent.innerHTML='';
-    
+   
     const type = xhr.getResponseHeader('content-type');
   
     const serverContent = document.querySelector("#serverContent");
-    console.log(xhr.status);
-  
-    
-      //parseJSON(xhr, content);
+
+      //Print the response out under the specific content section and provide options to switch the assignmnet under different sections of content
       if (xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'application/json') {
         const obj = JSON.parse(xhr.response);
-        console.log(xhr.status);
-        // titleField.value = "";
-        // descriptionField.value = "";
-        // dueDateField.value = "";
-
+       
+       
         if (obj.assignment) {
-          console.log(obj);
-
           const keys = Object.keys(obj.assignment);
-
-          console.log(keys);
           for (let i = 0; i < keys.length; i++) {
             let assignDiv = document.createElement('div');
             let assignment = obj.assignment[keys[i]];
-            
+
             let assignmentDetails = document.createElement("p");
             assignmentDetails.innerHTML = `<p>Assignment</p>`;
             assignmentDetails.innerHTML += `<p>Title: ${assignment.Title}</p>`;
@@ -64,13 +64,6 @@ let deletes = false;
             generateAssignButton(assignDiv, "Switch to Almost Done Card", "Almost Done", assignment);
             generateAssignButton(assignDiv, "Switch to Done Card", "Done", assignment);
 
-             let deleteButton = document.createElement("button");
-             deleteButton.id = `delete-${assignment.Title}`;
-             deleteButton.innerHTML = "Delete Assignment";
-             assignDiv.appendChild(deleteButton);
-           
-
-            
             switch(assignment.Column) {
               case 'To Do': content = toDoContent; break;
               case 'Doing': content = doingContent; break;
@@ -79,24 +72,14 @@ let deletes = false;
             }
             
             content.appendChild(assignDiv);
-            
-             deleteButton.addEventListener('click', () => {
-              assignmentDetails.innerHTML = '';
-                sendAjax(`/deleteAssignment?Title=${assignment.Title}`, 'application/json');
-             });   
           }
         }
       }
       
-      if (type === 'application/json') {
-        const obj = JSON.parse(xhr.response);
-       
-        serverContent.innerHTML += `<p>Message: ${obj.message}</p>`;
-        serverContent.innerHTML += `<p>Server Data Passed: ${xhr.response}</p>`;
-      }
-
     }
   
+
+  //Generates buttons under each assignmnet to give the user controls on switching the assignment under different cards to diplay content
   const generateAssignButton = (container, text, column, assignment) => {
     let button = document.createElement("button");
     button.innerHTML = text;
@@ -106,13 +89,13 @@ let deletes = false;
     container.appendChild(button);
   };
 
+  //Sends the post to the server to establish the data and through query params 
     const sendPost = (e, assignmentForm, type) => {
       e.preventDefault();
-      console.log(type);
 
       const nameAction = assignmentForm.getAttribute('action');
       const nameMethod = assignmentForm.getAttribute('method');
-
+      
       const xhr = new XMLHttpRequest();
       xhr.open(nameMethod, nameAction);
     
@@ -127,12 +110,10 @@ let deletes = false;
       return false;
     };
 
-
+    //When a user wishes to swap the assignmnet card that the current assignmnet is under, the update assignmnet adjusts where the assignmnet information is displayed
     const updateAssignment = (title, description, dueDate, column) => {
       const xhr = new XMLHttpRequest();
       xhr.open('POST', '/addAssignments');
-
-      console.dir(`Updating: ${title}`);
 
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
@@ -143,15 +124,11 @@ let deletes = false;
       return false;
     };
 
-    
+    //Creates the 'GET' request in json and displays the reponses under the function handleResponse
     const sendAjax = ( url, acceptedType) => {
         let xhr = new XMLHttpRequest();
-        //if(deletes == true){
-         // xhr.open('DELETE', url);
-        //}
-        //else{
-          xhr.open('GET', url);
-     //   }
+        
+        xhr.open('GET', url);
        
         xhr.setRequestHeader('Accept', acceptedType);
 
@@ -160,18 +137,18 @@ let deletes = false;
         xhr.send();
     };
 
+    //Establishing the user selections for the title, description, and due date and sending them to Ajax through /getAssignments to be further
+    //passed dwon to sendPost to add the assignmnet to the specific card section.
     const init = () => {
-      let url, method, type;
       const assignmentForm = document.querySelector('#assignmentForm');
       const userForm = document.querySelector('#userForm');
         
-      titleField = assignmentForm.querySelector('#titleField');
+       titleField = assignmentForm.querySelector('#titleField');
        descriptionField = assignmentForm.querySelector('#descriptionField');
        dueDateField = assignmentForm.querySelector('#dueDateField');
 
-
-      const addUser = (e) => sendPost(e, assignmentForm, 'application/json');
-      assignmentForm.addEventListener('submit', addUser);
+      const addAssignment = (e) => sendPost(e, assignmentForm, 'application/json');
+      assignmentForm.addEventListener('submit', addAssignment);
       sendAjax('/getAssignments', 'application/json');
     };
 
@@ -215,19 +192,6 @@ let deletes = false;
     </section>
     </section>
     <section id="doneContent">
-    </section>
-  </div>
-
-
-  <div id="serverContentTitles">
-    </section>
-    <h3 id="serverTitle">Server Content: </h3>
-    </section>
-  </div>
-
-  <div id="serverResponses">
-    </section>
-    <section id="serverContent">
     </section>
   </div>
 
