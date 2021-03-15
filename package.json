@@ -8,9 +8,7 @@
     "pretest": "eslint ./src --fix",
     "test": "echo \"Tests complete\"",
     "debug": "node --inspect ./src/server.js",
-    "nodemon": "nodemon -e js,html,css --watch ./src --watch ./hosted ./src/server.js",
-    "build": "babel ./client --out-file ./hosted/DONT_EDIT_bundle.js",
-    "watch": "babel --watch ./client --out-file ./hosted/DONT_EDIT_bundle.js"
+    "nodemon": "nodemon -e js,html,css --watch ./src --watch ./hosted ./src/server.js"
   },
   "repository": {
     "type": "git",
