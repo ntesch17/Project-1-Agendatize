@@ -16,7 +16,7 @@ let dueDateField,content;
 const serverContent = document.querySelector('#serverContent');
 let cardSelect = document.querySelector('#cardField');
 
-
+//Handles all server responses
 const handleResponse = (xhr) => {
   //Collecting content querys
   let toDoContent = document.querySelector('#toDoContent');
@@ -36,11 +36,9 @@ const handleResponse = (xhr) => {
    cardSelect.value = 'Select a Card to place Assignment Under';
 
    const type = xhr.getResponseHeader('content-type');
-  
-   
 
-      //Print the response out under the specific content section and provide options to switch the assignmnet under different sections of content
-      if (xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'application/json') {
+    //Print the response out under the specific content section and provide options to switch the assignmnet under different sections of content
+    if (xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'application/json') {
         const obj = JSON.parse(xhr.response);
        
         //If there is an assignmnet message
