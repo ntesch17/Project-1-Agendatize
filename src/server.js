@@ -10,8 +10,6 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 const handlePost = (request, response, parsedUrl) => {
   const body = [];
   if (parsedUrl.pathname === '/addAssignments') {
-    // const body = [];
-
     request.on('error', (err) => {
       console.dir(err);
       response.statusCode = 400;

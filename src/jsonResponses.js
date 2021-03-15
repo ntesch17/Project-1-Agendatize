@@ -18,7 +18,6 @@ const getAssignment = (request, response) => {
   const responsesMessage = {
     message: 'Assignment Added!',
     assignment,
-
   };
 
   respond(request, response, 200, responsesMessage);
@@ -30,7 +29,6 @@ const addAssignment = (request, response, body) => {
   const responsesMessage = {
     message: 'The Assignments title, description, and due date are all required',
     id: 'Bad Request',
-
   };
 
   if (!body.Title || !body.Description || !body.DueDate || !body.Column) {
