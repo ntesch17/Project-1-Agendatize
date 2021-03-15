@@ -13,40 +13,41 @@
 let titleField;
 let descriptionField;
 let dueDateField,content;
-let deletes = false;
+const serverContent = document.querySelector('#serverContent');
+let cardSelect = document.querySelector('#cardField');
 
 
-  const handleResponse = (xhr) => {
-
-    //Reset Controls
-    titleField.value='';
-    descriptionField.value='';
-    dueDateField.value='';
-    document.querySelector('#cardField').value = 'Select a Card to place Assignment Under';
-
+const handleResponse = (xhr) => {
   //Collecting content querys
   let toDoContent = document.querySelector('#toDoContent');
   let doingContent = document.querySelector('#doingContent');
   let almostDoneContent = document.querySelector('#almostDoneContent');
   let doneContent = document.querySelector('#doneContent');
-
+  
   //Resets content
   toDoContent.innerHTML='';
   doingContent.innerHTML='';
   almostDoneContent.innerHTML='';
   doneContent.innerHTML='';
-   
-    const type = xhr.getResponseHeader('content-type');
+   //Reset Controls
+   titleField.value='';
+   descriptionField.value='';
+   dueDateField.value='';
+   cardSelect.value = 'Select a Card to place Assignment Under';
+
+   const type = xhr.getResponseHeader('content-type');
   
-    const serverContent = document.querySelector("#serverContent");
+   
 
       //Print the response out under the specific content section and provide options to switch the assignmnet under different sections of content
       if (xhr.response !== "" && xhr.getResponseHeader('Content-Type') === 'application/json') {
         const obj = JSON.parse(xhr.response);
        
-       
+        //If there is an assignmnet message
         if (obj.assignment) {
           const keys = Object.keys(obj.assignment);
+          
+          //Cycles through each element to be printed
           for (let i = 0; i < keys.length; i++) {
             let assignDiv = document.createElement('div');
             let assignment = obj.assignment[keys[i]];
@@ -64,6 +65,7 @@ let deletes = false;
             generateAssignButton(assignDiv, "Switch to Almost Done Card", "Almost Done", assignment);
             generateAssignButton(assignDiv, "Switch to Done Card", "Done", assignment);
 
+            //Switch statement for columns
             switch(assignment.Column) {
               case 'To Do': content = toDoContent; break;
               case 'Doing': content = doingContent; break;
@@ -72,10 +74,17 @@ let deletes = false;
             }
             
             content.appendChild(assignDiv);
+
+            //User responses
+            if(type === 'application/json'){
+              const obj = JSON.parse(xhr.response);
+              serverContent.innerHTML = '';
+              serverContent.innerHTML = 'Enter in an assignment including the title, description, due date, and select a card to enter the assignment under!'
+              serverContent.innerHTML += `<p>${obj.message}</p>`;
+            }
           }
         }
       }
-      
     }
   
 
@@ -138,17 +147,22 @@ let deletes = false;
     };
 
     //Establishing the user selections for the title, description, and due date and sending them to Ajax through /getAssignments to be further
-    //passed dwon to sendPost to add the assignmnet to the specific card section.
+    //passed down to sendPost to add the assignmnet to the specific card section.
     const init = () => {
       const assignmentForm = document.querySelector('#assignmentForm');
-      const userForm = document.querySelector('#userForm');
         
        titleField = assignmentForm.querySelector('#titleField');
        descriptionField = assignmentForm.querySelector('#descriptionField');
        dueDateField = assignmentForm.querySelector('#dueDateField');
+      
+       if((titleField.value = ' ' )|| (descriptionField.value = ' ') || (dueDateField.value = ' ') || (cardSelect.value = 'Select a Card to place Assignment Under')){
+        serverContent.innerHTML = 'Enter in an assignment including the title, description, due date, and select a card to enter the assignment under!'
+       }
+       
+      assignmentForm.addEventListener('submit', function(e){
+       sendPost(e, assignmentForm, 'application/json');
+      });
 
-      const addAssignment = (e) => sendPost(e, assignmentForm, 'application/json');
-      assignmentForm.addEventListener('submit', addAssignment);
       sendAjax('/getAssignments', 'application/json');
     };
 
@@ -164,49 +178,45 @@ let deletes = false;
   </header>
 
   <div id="contentTitles">
-    </section>
+   
     <h3 id="toDoTitle">To Do: </h3>
-    </section>
-    </section>
+    
     <h3 id="doingTitle">Doing: </h3>
-    </section>
-    </section>
+    
     <h3 id="almostDoneTitle">Almost Done: </h3>
-    </section>
-    </section>
+    
     <h3 id="doneTitle">Done: </h3>
-    </section>
+    
   </div>
 
   <div id="content">
-    </section>
     <section id="toDoContent">
-
-    </section>
-
     </section>
     <section id="doingContent">
     </section>
-    </section>
     <section id="almostDoneContent">
-    </section>
     </section>
     <section id="doneContent">
     </section>
   </div>
 
-  <div id="controlsTitle">
+  <div id="serverResponses">
+  <section id="serverContent">
+  </section>
+  </div>
+
+  <div id="controlsTitles">
     <section>
       <h3 id="controlsTitle">Agendatize Controls: </h3>
     </section>
   </div>
   <section id="top">
     <form id="assignmentForm" action="/addAssignments" method="post">
-      <label for="title">Assignment Title: </label>
+      <label>Assignment Title: </label>
       <input id="titleField" type="text" name="title" />
-      <label for="description">Assignment Description: </label>
+      <label>Assignment Description: </label>
       <input id="descriptionField" type="text" name="description" />
-      <label for="dueDate">Assignment Due Date:</label>
+      <label>Assignment Due Date:</label>
       <input type="date" id="dueDateField" name="dueDate">
 
       <select id='cardField'>
@@ -216,9 +226,8 @@ let deletes = false;
         <option value='Almost Done'>Almost Done Section</option>
         <option value='Done'>Done Section</option>
       </select>
-      <input type="submit" value="Add the Assignment!" />
-  </section>
-
+      <input id='submitButton' type="submit" value="Add the Assignment!" />
+    </form>
+    </section>
 </body>
-
 </html>

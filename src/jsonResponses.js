@@ -21,6 +21,7 @@ const getAssignment = (request, response) => {
 
   };
 
+  
   respond(request, response, 200, responsesMessage);
   return respondMeta(request, response, 200);
 };
