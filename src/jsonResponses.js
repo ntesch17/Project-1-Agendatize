@@ -59,6 +59,7 @@ const addAssignment = (request, response, body) => {
     return respondMeta(request, response, responseCode);
   }
 
+  respond(request, response, responseCode, responsesMessage);
   return respondMeta(request, response, responseCode);
 };
 
