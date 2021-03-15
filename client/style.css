@@ -111,6 +111,7 @@ html, body {
 }
 
 #doneContent {
+  height:400px;
   margin-top: 20px;
   font-size: 1em;
   text-align: center;
@@ -120,10 +121,9 @@ html, body {
 }
 
 #toDoContent {
+  height:400px;
   margin-top: 20px;
-  
   font-size: 1em;
- 
   text-align: center;
   background-color: #FFF1E6;
   color: #6b705c;
@@ -131,6 +131,7 @@ html, body {
 }
 
 #almostDoneContent {
+  height:400px;
   margin-top: 20px;
   font-size: 1em;
   text-align: center;
