@@ -31,10 +31,14 @@ const handlePost = (request, response, parsedUrl) => {
 
 // Handles get requests to css, the page index, and for get assignmnets
 const handleGet = (request, response, parsedUrl) => {
+  const params = query.parse(parsedUrl.query);
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
   } else if (parsedUrl.pathname === '/getAssignments') {
     jsonHandler.getAssignment(request, response);
+  }else if (parsedUrl.pathname === '/deleteAssignments') {
+      jsonHandler.deleteAssignment(request, response, params);
+      
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else {

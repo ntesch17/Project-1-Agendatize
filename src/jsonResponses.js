@@ -63,6 +63,25 @@ const addAssignment = (request, response, body) => {
   return respondMeta(request, response, responseCode);
 };
 
+const deleteAssignment = (request, response, params) => {
+  const responsesMessage = {
+    message: 'Assignment Deleted',
+    assignment,
+  };
+  if(!params.Title){
+    
+    responsesMessage.message = 'The Assignments title is required',
+
+      
+    respond(request, response, 400, responsesMessage);
+    return respondMeta(request, response, 400);
+  }
+
+  delete assignment[params.Title];
+  respond(request, response, 204, responsesMessage);
+  return respondMeta(request, response, 204);
+}
+
 // if page not found display 404
 const notFound = (request, response) => {
   const responsesMessage = {
@@ -77,5 +96,6 @@ const notFound = (request, response) => {
 module.exports = {
   getAssignment,
   addAssignment,
+  deleteAssignment,
   notFound,
 };

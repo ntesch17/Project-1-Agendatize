@@ -63,6 +63,11 @@ const handleResponse = (xhr) => {
             generateAssignButton(assignDiv, "Switch to Almost Done Card", "Almost Done", assignment);
             generateAssignButton(assignDiv, "Switch to Done Card", "Done", assignment);
 
+            let deleteButton = document.createElement("button");
+            deleteButton.id = `delete-${assignment.Title}`;
+            deleteButton.innerHTML = "Delete Assignment";
+            assignDiv.appendChild(deleteButton);
+
             //Switch statement for columns
             switch(assignment.Column) {
               case 'To Do': content = toDoContent; break;
@@ -73,6 +78,7 @@ const handleResponse = (xhr) => {
             
             content.appendChild(assignDiv);
 
+            
             //User responses
             if(type === 'application/json'){
               const obj = JSON.parse(xhr.response);
@@ -80,6 +86,11 @@ const handleResponse = (xhr) => {
               serverContent.innerHTML = 'Enter in an assignment including the title, description, due date, and select a card to enter the assignment under!'
               serverContent.innerHTML += `<p>${obj.message}</p>`;
             }
+
+            document.querySelector(`#delete-${assignment.Title}`).addEventListener('click', () => {
+              sendDelete(`/deleteAssignments?Title=${assignment.Title}`, 'application/json');
+              });   
+
           }
         }
       }
@@ -140,6 +151,18 @@ const handleResponse = (xhr) => {
         xhr.setRequestHeader('Accept', acceptedType);
 
         xhr.onload = () => handleResponse(xhr);
+
+        xhr.send();
+    };
+
+    const sendDelete = ( url, acceptedType) => {
+        let xhr = new XMLHttpRequest();
+        
+        xhr.open('GET', url);
+       
+        xhr.setRequestHeader('Accept', acceptedType);
+
+        xhr.onload = (sendAjax('/getAssignments', 'application/json')); 
 
         xhr.send();
     };
