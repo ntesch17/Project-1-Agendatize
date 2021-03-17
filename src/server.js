@@ -36,9 +36,8 @@ const handleGet = (request, response, parsedUrl) => {
     htmlHandler.getCSS(request, response);
   } else if (parsedUrl.pathname === '/getAssignments') {
     jsonHandler.getAssignment(request, response);
-  }else if (parsedUrl.pathname === '/deleteAssignments') {
-      jsonHandler.deleteAssignment(request, response, params);
-      
+  } else if (parsedUrl.pathname === '/deleteAssignments') {
+    jsonHandler.deleteAssignment(request, response, params);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else {
